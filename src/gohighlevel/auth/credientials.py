@@ -2,7 +2,7 @@ class Credientials:
     __client_id: str = ""
     __client_secret: str = ""
     __redirect_url: str = ""
-    __scopes: [] = []
+    __scopes = []
     __is_white_label: str = ""
 
     def __init__(self, client_id, client_secret, redirect_url, scopes, is_white_label):

@@ -7,7 +7,7 @@ in GoHighLevel, including creating, updating, and managing sub-accounts.
 from typing import Dict, List, Optional, Union, TypedDict
 import requests
 
-from auth.authdata import Auth
+from .auth.authdata import Auth
 from .subaccounts_customvalues import CustomValue
 from .subaccounts_customfields import CustomField
 from .contacts_tags import Tag

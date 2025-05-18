@@ -6,7 +6,7 @@ in GoHighLevel, including orders, transactions, subscriptions, and more.
 
 from typing import Optional
 
-from auth.authdata import Auth
+from .auth.authdata import Auth
 from .payments_integrations import PaymentIntegrations
 from .payments_orders import PaymentOrders
 from .payments_orderfulfillments import PaymentOrderFulfillments

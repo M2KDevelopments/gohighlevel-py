@@ -1,7 +1,7 @@
+from .auth.authdata import Auth
 from typing import Optional, List, Dict, Any
 import requests
 
-from auth.authdata import Auth
 
 class Blog:
     """

@@ -7,7 +7,7 @@ in GoHighLevel, including creating, retrieving, listing, and deleting coupons.
 from typing import Dict, List, Optional, Union
 import requests
 
-from auth.authdata import Auth
+from .auth.authdata import Auth
 
 
 class PaymentCoupons:

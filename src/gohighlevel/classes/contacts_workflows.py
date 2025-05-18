@@ -7,7 +7,7 @@ associations with contacts in GoHighLevel.
 from typing import Dict, Optional
 import requests
 
-from auth.authdata import Auth
+from .auth.authdata import Auth
 
 
 class ContactsWorkflows:

@@ -1,6 +1,6 @@
 from typing import Optional, Dict, Any
 import requests
-from auth import Auth
+from .auth.authdata import Auth
 
 
 class ProductPrice:

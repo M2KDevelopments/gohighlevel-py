@@ -7,7 +7,7 @@ in GoHighLevel, including listing and managing workflows.
 from typing import Dict, List, Optional
 import requests
 
-from auth.authdata import Auth
+from .auth.authdata import Auth
 
 
 class Workflow:

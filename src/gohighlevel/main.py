@@ -4,32 +4,32 @@ This module provides the main GoHighLevel class for interacting with the GoHighL
 including authentication, OAuth flow, and access to all API endpoints.
 """
 
-from auth.authdata import Auth
-from auth.credentials import Credentials
-from classes.blogs import Blog
-from classes.business import Business
-from classes.calendars import Calendar
-from classes.campaigns import Campaign
-from classes.company import Company
-from classes.contacts import Contacts
-from classes.workflows import Workflow
-from classes.conversations import Conversations
-from classes.courses import Course
-from classes.customfields import CustomFields
-from classes.custommenus import CustomMenus
-from classes.email import Email
-from classes.forms import Form
-from classes.location import Location
-from classes.medialibrary import MediaLibrary
-from classes.oauth import OAuth
-from classes.opportunities import Opportunities
-from classes.products import Product
-from classes.saas import SaaS
-from classes.snapshots import Snapshots
-from classes.subaccounts import SubAccounts
-from classes.surveys import Survey
-from classes.triggerlinks import TriggerLinks
-from classes.users import Users
+from .classes.auth.authdata import Auth
+from .classes.auth.credentials import Credentials
+from .classes.blogs import Blog
+from .classes.business import Business
+from .classes.calendars import Calendar
+from .classes.campaigns import CampaignAPI
+from .classes.company import CompanyAPI
+from .classes.contacts import Contacts
+from .classes.workflows import Workflow
+from .classes.conversations import Conversations
+from .classes.courses import Course
+from .classes.customfields import CustomFields
+from .classes.custommenus import CustomMenus
+from .classes.email import Email
+from .classes.forms import Form
+from .classes.location import Location
+from .classes.medialibrary import MediaLibrary
+from .classes.oauth import OAuth
+from .classes.opportunities import Opportunities
+from .classes.products import Product
+from .classes.saas import SaaS
+from .classes.snapshots import Snapshots
+from .classes.subaccounts import SubAccounts
+from .classes.surveys import Surveys
+from .classes.triggerlinks import TriggerLinks
+from .classes.users import Users
 
 
 BASE_API_URL = 'https://rest.gohighlevel.com/v1'
@@ -99,13 +99,13 @@ class GoHighLevel:
         self.contacts = Contacts(self.auth_data)
         self.conversations = Conversations(self.auth_data)
         self.medialibrary = MediaLibrary(self.auth_data)
-        self.campaigns = Campaign(self.auth_data)
-        self.company = Company(self.auth_data)
+        self.campaigns = CampaignAPI(self.auth_data)
+        self.company = CompanyAPI(self.auth_data)
         self.links = TriggerLinks(self.auth_data)
         self.courses = Course(self.auth_data)
         self.businesses = Business(self.auth_data)
         self.workflows = Workflow(self.auth_data)
-        self.surveys = Survey(self.auth_data)
+        self.surveys = Surveys(self.auth_data)
         self.blogs = Blog(self.auth_data)
         self.forms = Form(self.auth_data)
         self.subaccounts = SubAccounts(self.auth_data)

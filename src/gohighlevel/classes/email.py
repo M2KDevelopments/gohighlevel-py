@@ -1,7 +1,7 @@
 from typing import Optional, Dict, Any
 import requests
 
-from auth.authdata import Auth
+from .auth.authdata import Auth
 
 class Email:
     def __init__(self, auth_data: Optional[Auth] = None):

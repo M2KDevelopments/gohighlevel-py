@@ -1,8 +1,7 @@
 from typing import Optional, Dict, Any
 import requests
+from .auth.authdata import Auth
 from .products_prices import ProductPrice
-from auth import Auth
-
 
 class Product:
     """

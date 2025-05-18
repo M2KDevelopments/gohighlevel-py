@@ -1,7 +1,7 @@
 from typing import Optional
 import requests
 
-from auth.authdata import Auth
+from .auth.authdata import Auth
 
 class Campaign:
     """

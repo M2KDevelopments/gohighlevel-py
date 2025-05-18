@@ -8,7 +8,7 @@ from typing import Dict, List, Optional, TypedDict, Literal
 from urllib.parse import urlencode
 import requests
 
-from auth.authdata import Auth
+from .auth.authdata import Auth
 
 
 class Company(TypedDict, total=False):

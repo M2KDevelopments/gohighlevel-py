@@ -26,12 +26,11 @@ We recommend that you glance over the official <a href="https://highlevel.stopli
 ## Initialization
 ```python
 from gohighlevel import GoHighLevel
+from gohighlevel.classes.auth.credentials import Credentials
 
-# Initialize with your API key
-ghl = GoHighLevel(api_key="your_api_key")
+credentials=Credentials(api_key="***")
 
-# Or initialize with OAuth token
-ghl = GoHighLevel(access_token="your_oauth_token")
+ghl = GoHighLevel(credentials=credentials)
 ```
 
 ### OAuth URL

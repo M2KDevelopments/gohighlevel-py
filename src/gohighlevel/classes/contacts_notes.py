@@ -1,7 +1,7 @@
 from typing import Optional, Dict, Any, List
 import requests
 
-from auth.authdata import Auth
+from .auth.authdata import Auth
 
 class Note:
     """

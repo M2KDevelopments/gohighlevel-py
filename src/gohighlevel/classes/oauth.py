@@ -4,13 +4,13 @@ This module provides the OAuth class for handling authentication and authorizati
 with the GoHighLevel API, including OAuth flow and scope management.
 """
 
-from typing import Dict, List, Optional, Set, Union
+from typing import Optional
 import requests
 from urllib.parse import urlencode
 
-from auth.authdata import Auth
-from auth.callback import CallbackInfo
-from auth.credentials import Credentials
+from .auth.authdata import Auth
+from .auth.callback import CallbackInfo
+from .auth.credentials import Credentials
 
 
 class OAuth:

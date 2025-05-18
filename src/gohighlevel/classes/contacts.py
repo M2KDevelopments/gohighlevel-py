@@ -1,7 +1,7 @@
 from typing import Optional, Dict, Any, List, Union, Tuple
 import requests
 
-from auth.authdata import Auth
+from .auth.authdata import Auth
 from .contacts_tasks import Task
 from .contacts_notes import Note
 from .contacts_campaigns import Campaign
@@ -79,10 +79,9 @@ class Contacts:
         """
         if not self.auth_data:
             raise ValueError("Authentication data is required")
-            
-        headers = self.auth_data.headers
         
-        if getattr(self.auth_data, 'useAPIKey', False):
+        headers = self.auth_data.headers 
+        if self.auth_data.use_api_key:
             response = requests.get(
                 f"{self.auth_data.baseurl}/contacts/?limit={limit}&query={query}&sortBy={sort_by}&order={order}",
                 headers=headers
@@ -118,7 +117,7 @@ class Contacts:
         Returns:
             List of matching contacts
         """
-        if not self.auth_data or not getattr(self.auth_data, 'useAPIKey', False):
+        if not self.auth_data or not self.auth_data.use_api_key:
             raise ValueError("You need to use an API key to call this function. "
                            "Look at the documentation here https://public-api.gohighlevel.com/#5f4bde90-5179-43b2-b38d-f09b7bb771ad")
             
@@ -192,8 +191,8 @@ class Contacts:
         if not self.auth_data:
             raise ValueError("Authentication data is required")
             
-        location = location_id or getattr(self.auth_data, 'locationId', '')
-        body = contact if getattr(self.auth_data, 'useAPIKey', False) else {**contact, 'locationId': location}
+        location = location_id or self.auth_data.location_id
+        body = contact if self.auth_data.use_api_key else {**contact, 'locationId': location}
         
         response = requests.post(
             f"{self.auth_data.baseurl}/contacts/",
@@ -220,8 +219,8 @@ class Contacts:
         if not self.auth_data:
             raise ValueError("Authentication data is required")
             
-        location = location_id or getattr(self.auth_data, 'locationId', '')
-        body = contact if getattr(self.auth_data, 'useAPIKey', False) else {**contact, 'locationId': location}
+        location = location_id or self.auth_data.location_id
+        body = contact if self.auth_data.use_api_key else {**contact, 'locationId': location}
         
         response = requests.put(
             f"{self.auth_data.baseurl}/contacts/{id}",

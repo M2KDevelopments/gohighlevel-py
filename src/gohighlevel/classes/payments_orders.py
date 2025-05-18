@@ -7,7 +7,7 @@ in GoHighLevel, including retrieving and listing orders.
 from typing import Dict, List, Optional
 import requests
 
-from auth.authdata import Auth
+from .auth.authdata import Auth
 
 
 class PaymentOrders:

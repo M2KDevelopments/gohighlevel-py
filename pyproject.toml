@@ -1,0 +1,25 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/gohighlevel"]
+
+[project]
+name = "gohighlevel"
+version = "0.0.1"
+authors = [
+  { name="M2K Developments", email="m2kdevelopments@gmail.com" },
+]
+description = "Go Highlevel Python ease of use library implementation to their API"
+readme = "README.md"
+requires-python = ">=3.0"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+Homepage = "https://github.com/M2KDevelopments/gohighlevel-py"
+Issues = "https://github.com/M2KDevelopments/gohighlevel-py/issues"

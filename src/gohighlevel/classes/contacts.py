@@ -1,4 +1,4 @@
-from typing import Optional, Dict, Any, List, Union, Tuple
+from typing import Optional, Dict, Any, List, Union, Tuple, TypedDict, Literal
 import requests
 
 from .auth.authdata import Auth
@@ -8,6 +8,33 @@ from .contacts_campaigns import Campaign
 from .contacts_workflows import ContactsWorkflows
 from .contacts_tags import Tag
 from .contacts_appointments import Appointment
+
+class ContactSearchFilterSort(TypedDict):
+    field: str
+    direction: Literal["desc", "asc"]
+
+class SearchRange(TypedDict, total=False):
+    gte: Optional[str]
+    gt: Optional[str]
+    lte: Optional[str]
+    lt: Optional[str]
+
+class SearchSimpleFilter(TypedDict):
+    field: str
+    operator: Literal["eq", "not_exists", "range", "exists", "not_contains", "contains", "not_eq"]
+    value: Union[str, bool, SearchRange]
+
+class SearchComplexFilter(TypedDict):
+    group: Literal["OR", "AND"]
+    filters: List[SearchSimpleFilter]
+
+class ContactSearchFilter(TypedDict):
+    location_id: str
+    page_limit: int
+    page: Optional[int]
+    search_after: Optional[List[str]]
+    filters: List[Union[SearchComplexFilter, SearchSimpleFilter]]
+    sort: List[ContactSearchFilterSort]
 
 class Contacts:
     """
@@ -104,6 +131,55 @@ class Contacts:
                 'total': data['total'],
                 'contacts': data['contacts']
             }
+
+    def search_with_filters(self, query: ContactSearchFilter) -> Dict[str, Any]:
+        """
+        Get Searched contacts using filters.
+        Documentation - https://highlevel.stoplight.io/docs/integrations/dbe4f3a00a106-search-contacts
+        Documentation on Filters - https://doc.clickup.com/8631005/d/h/87cpx-158396/6e629989abe7fad
+        
+        Args:
+            query: A ContactSearchFilter object containing search parameters including:
+                  - location_id: The location ID to search in
+                  - page_limit: Maximum number of results per page
+                  - page: Optional page number
+                  - search_after: Optional list of values to search after
+                  - filters: List of search filters (simple or complex)
+                  - sort: List of sort criteria
+                  
+        Returns:
+            Dictionary containing total and contacts list
+        
+        Example:
+            filter_query = {
+                'location_id': 'abc123',
+                'page_limit': 10,
+                'filters': [{
+                    'field': 'email',
+                    'operator': 'contains',
+                    'value': '@example.com'
+                }],
+                'sort': [{
+                    'field': 'dateAdded',
+                    'direction': 'desc'
+                }]
+            }
+            results = contacts.search_with_filters(filter_query)
+        """
+        if not self.auth_data:
+            raise ValueError("Authentication data is required")
+            
+        response = requests.post(
+            f"{self.auth_data.baseurl}/contacts/search/",
+            json=query,
+            headers=self.auth_data.headers
+        )
+        response.raise_for_status()
+        data = response.json()
+        return {
+            'total': data['total'],
+            'contacts': data['contacts']
+        }
 
     def lookup(self, email: str = "", phone: str = "") -> List[Dict[str, Any]]:
         """

@@ -21,8 +21,8 @@ classifiers = [
 ]
 
 dependencies = [
-  'requests[security] < 3',
-  'typing-extensions >= 4.8.0',
+  'requests',
+  'typing-extensions',
 ]
 
 [project.urls]

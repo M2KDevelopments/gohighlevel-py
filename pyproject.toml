@@ -20,6 +20,11 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 
+dependencies = [
+  'requests[security] < 3',
+  'typing-extensions >= 4.8.0',
+]
+
 [project.urls]
 Homepage = "https://github.com/M2KDevelopments/gohighlevel-py"
 Issues = "https://github.com/M2KDevelopments/gohighlevel-py/issues"

@@ -29,19 +29,23 @@ from gohighlevel import GoHighLevel
 from gohighlevel.classes.auth.credentials import Credentials
 
 credentials=Credentials(api_key="***")
-
 ghl = GoHighLevel(credentials=credentials)
 ```
 
 ### OAuth URL
 ```python
 from gohighlevel import GoHighLevel
+from gohighlevel.classes.auth.credentials import Credentials
+
 
 # Initialize with your client ID and secret
-ghl = GoHighLevel(
+credentials=Credentials(
     client_id="your_client_id",
     client_secret="your_client_secret"
 )
+
+# Initialize with your client ID and secret
+ghl = GoHighLevel(credentials=credentials)
 
 # Get OAuth URL
 oauth_url = ghl.get_oauth_url(
@@ -54,12 +58,15 @@ print(oauth_url)
 ### OAuth Callback
 ```python
 from gohighlevel import GoHighLevel
+from gohighlevel.classes.auth.credentials import Credentials
+
 
 # Initialize with your client ID and secret
-ghl = GoHighLevel(
+credentials=Credentials(
     client_id="your_client_id",
     client_secret="your_client_secret"
 )
+ghl = GoHighLevel(credentials=credentials)
 
 # Exchange code for tokens
 tokens = ghl.exchange_code(
@@ -140,6 +147,10 @@ note = ghl.calendar.appointmentnotes.add(
 
 ### Using Contacts API
 ```python
+
+# Search contacts
+searched_contacts = ghl.contacts.search(query="martin")
+
 # Get all contacts
 contacts = ghl.contacts.get_all(location_id="your_location_id")
 

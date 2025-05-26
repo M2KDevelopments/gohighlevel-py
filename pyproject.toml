@@ -7,7 +7,7 @@ packages = ["src/gohighlevel"]
 
 [project]
 name = "gohighlevel"
-version = "1.0.0"
+version = "1.0.1"
 authors = [
   { name="M2K Developments", email="m2kdevelopments@gmail.com" },
 ]

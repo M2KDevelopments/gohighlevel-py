@@ -80,6 +80,7 @@ class OAuth:
                 'grant_type': 'authorization_code',
                 'client_id': self.credentials.client_id,
                 'client_secret': self.credentials.client_secret,
+                'user_type': self.credentials.user_type,
                 'code': info.code
             }
         else:
@@ -87,6 +88,7 @@ class OAuth:
                 'grant_type': 'refresh_token',
                 'client_id': self.credentials.client_id,
                 'client_secret': self.credentials.client_secret,
+                'user_type': self.credentials.user_type,
                 'refresh_token': info.refresh_token
             }
 

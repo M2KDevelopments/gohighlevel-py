@@ -9,15 +9,15 @@ from typing import List, Optional
 
 class Credentials:
     """Credentials container for GoHighLevel API.
-    
+
     Documentation: https://highlevel.stoplight.io/docs/integrations/0443d7d1a4bd0-overview
     """
-    
+
     def __init__(self, client_id: Optional[str] = None, client_secret: Optional[str] = None,
                  redirect_uri: Optional[str] = None, scopes: Optional[List[str]] = None,
-                 is_white_label: bool = False, api_key: Optional[str] = None):
+                 is_white_label: bool = False, api_key: Optional[str] = None, user_type: Optional[str] = "Location"):
         """Initialize Credentials.
-        
+
         Args:
             client_id (Optional[str]): OAuth client ID
             client_secret (Optional[str]): OAuth client secret
@@ -25,10 +25,12 @@ class Credentials:
             scopes (Optional[List[str]]): List of OAuth scopes
             is_white_label (bool): Whether to use white label domain
             api_key (Optional[str]): API key for direct authentication
+            user_type (Optional[str]): The type of token to be requested
         """
         self.client_id = client_id
         self.client_secret = client_secret
         self.redirect_uri = redirect_uri
         self.scopes = scopes or []
         self.is_white_label = is_white_label
-        self.api_key = api_key 
+        self.api_key = api_key
+        self.user_type = user_type or "Location"

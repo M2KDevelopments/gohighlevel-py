@@ -1,4 +1,4 @@
-# Go High Level Python
+# Go High Level Python Ease of use API
 
 Go Highlevel Python ease of use library implementation to their API
 
@@ -7,10 +7,6 @@ Go Highlevel Python ease of use library implementation to their API
 ![Static Badge](https://img.shields.io/badge/MIT-green?style=plastic&logo=license&logoColor=green&label=license)
 ![Static Badge](https://img.shields.io/badge/buy_me_a_coffee-yellow?style=plastic&logo=buymeacoffee&logoColor=yellow&label=support&link=https%3A%2F%2Fwww.buymeacoffee.com%2Fm2kdevelopments)
 ![Static Badge](https://img.shields.io/badge/paypal-blue?style=plastic&logo=paypal&logoColor=blue&label=support&link=https%3A%2F%2Fpaypal.me%2Fm2kdevelopment)
- 
-<br/>
-<img src="./ghl.jpg" alt="Highlevel" width="420">
-<br/>
 
 
 Go Highlevel ease of use library implementation to their API. Make sure you've create a Go Highlevel App in the <a href="https://marketplace.gohighlevel.com/" target="_blank">Market Place</a>
@@ -25,8 +21,8 @@ We recommend that you glance over the official <a href="https://highlevel.stopli
 
 ## Initialization
 ```python
-from gohighlevel import GoHighLevel
-from gohighlevel.classes.auth.credentials import Credentials
+from gohl import GoHighLevel
+from gohl.classes.auth.credentials import Credentials
 
 credentials=Credentials(api_key="***")
 ghl = GoHighLevel(credentials=credentials)
@@ -34,8 +30,8 @@ ghl = GoHighLevel(credentials=credentials)
 
 ### OAuth URL
 ```python
-from gohighlevel import GoHighLevel
-from gohighlevel.classes.auth.credentials import Credentials
+from gohl import GoHighLevel
+from gohl.classes.auth.credentials import Credentials
 
 
 # Initialize with your client ID and secret
@@ -57,8 +53,8 @@ print(oauth_url)
 
 ### OAuth Callback
 ```python
-from gohighlevel import GoHighLevel
-from gohighlevel.classes.auth.credentials import Credentials
+from gohl import GoHighLevel
+from gohl.classes.auth.credentials import Credentials
 
 
 # Initialize with your client ID and secret

@@ -6,8 +6,8 @@ build-backend = "hatchling.build"
 packages = ["src/gohighlevel"]
 
 [project]
-name = "gohighlevel"
-version = "1.0.2"
+name = "gohl"
+version = "1.0.3"
 authors = [
   { name="M2K Developments", email="m2kdevelopments@gmail.com" },
 ]

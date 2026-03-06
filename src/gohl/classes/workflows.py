@@ -43,7 +43,7 @@ class Workflow:
             raise ValueError("Authentication data is required")
             
         response = requests.get(
-            f"{self.auth_data.baseurl}/workflows",
+            f"{self.auth_data.baseurl}/workflows/",
             params={'locationId': location_id},
             headers=self.auth_data.headers
         )

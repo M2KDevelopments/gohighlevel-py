@@ -243,6 +243,36 @@ class Contacts:
         response.raise_for_status()
         return response.json()['contact']
 
+    def upsert(self, contact: Dict[str, Any], location_id: str = "") -> Dict[str, Any]:
+        """
+        Upserts contact. Creates if it does not exist or updates an existing one.
+
+        For other GHL App and API version
+        Documentation: https://marketplace.gohighlevel.com/docs/ghl/contacts/upsert-contact
+
+        Args:
+            contact: Updated contact information
+            location_id: Optional location ID
+
+        Returns:
+            The upserted contact
+        """
+        if not self.auth_data:
+            raise ValueError("Authentication data is required")
+
+        location = location_id or self.auth_data.location_id
+        body = {**contact, 'locationId': location}
+
+        response = requests.post(
+            f"{self.auth_data.baseurl}/contacts/upsert",
+            json=body,
+            headers=self.auth_data.headers
+        )
+
+        response.raise_for_status()
+
+        return response.json()['contact']
+
     def remove(self, id: str) -> bool:
         """
         Remove contact. For other GHL App and API version

@@ -15,7 +15,7 @@ class Business:
     def get_all(self, location_id: str) -> List[Dict[str, Any]]:
         """
         Get Business by location id
-        Documentation - https://highlevel.stoplight.io/docs/integrations/a8db8afcbe0a3-get-businesses-by-location
+        Documentation - https://marketplace.gohighlevel.com/docs/ghl/businesses/get-businesses-by-location
         
         Args:
             location_id: The location ID to get businesses for
@@ -27,7 +27,7 @@ class Business:
             raise ValueError("Authentication data is required")
             
         response = requests.get(
-            f"{self.auth_data.baseurl}/businesses?locationId={location_id}",
+            f"{self.auth_data.baseurl}/businesses/?locationId={location_id}",
             headers=self.auth_data.headers
         )
         response.raise_for_status()
@@ -36,7 +36,7 @@ class Business:
     def get(self, business_id: str) -> Dict[str, Any]:
         """
         Get Business
-        Documentation - https://highlevel.stoplight.io/docs/integrations/c4d36fb259656-get-business
+        Documentation - https://marketplace.gohighlevel.com/docs/ghl/businesses/get-business
         
         Args:
             business_id: The business ID to retrieve
@@ -57,7 +57,7 @@ class Business:
     def add(self, business: Dict[str, Any]) -> Dict[str, Any]:
         """
         Create Business
-        Documentation - https://highlevel.stoplight.io/docs/integrations/7636876b20ac3-create-business
+        Documentation - https://marketplace.gohighlevel.com/docs/ghl/businesses/create-business
         
         Args:
             business: Business information to create
@@ -69,7 +69,7 @@ class Business:
             raise ValueError("Authentication data is required")
             
         response = requests.post(
-            f"{self.auth_data.baseurl}/businesses",
+            f"{self.auth_data.baseurl}/businesses/",
             json=business,
             headers=self.auth_data.headers
         )
@@ -79,7 +79,7 @@ class Business:
     def update(self, business_id: str, business: Dict[str, Any]) -> Dict[str, Any]:
         """
         Update Business
-        Documentation - https://highlevel.stoplight.io/docs/integrations/b95210ff2a8d7-update-business
+        Documentation - https://marketplace.gohighlevel.com/docs/ghl/businesses/update-business
         
         Args:
             business_id: The business ID to update
@@ -102,7 +102,7 @@ class Business:
     def remove(self, business_id: str) -> bool:
         """
         Delete Business
-        Documentation - https://highlevel.stoplight.io/docs/integrations/6f776fbd6dd1f-delete-business
+        Documentation - https://marketplace.gohighlevel.com/docs/ghl/businesses/delete-business
         
         Args:
             business_id: The business ID to delete

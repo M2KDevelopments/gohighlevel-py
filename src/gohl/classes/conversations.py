@@ -100,6 +100,37 @@ class Conversations:
         response.raise_for_status()
         return response.json()['conversation']
 
+    def create(self, location_id: str, contact_id: str) -> Dict:
+        """Create a new conversation.
+
+        https://marketplace.gohighlevel.com/docs/ghl/conversations/create-conversation
+
+        Args:
+            location_id (str): The ID of the location
+            contact_id (str): The ID of the contact to associate with the conversation
+
+        Returns:
+            Dict: The created conversation object
+
+        Raises:
+            requests.exceptions.RequestException: If the API request fails
+        """
+        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+            raise ValueError("Authentication data is required")
+
+        data = {
+            'locationId': location_id,
+            'contactId': contact_id
+        }
+
+        response = requests.post(
+            f"{self.auth_data['baseurl']}/conversations/",
+            json=data,
+            headers=self.auth_data['headers']
+        )
+        response.raise_for_status()
+        return response.json()['conversation']
+
     def update(self, conversation_id: str, data: Dict) -> Dict:
         """Update a conversation.
 

@@ -9,7 +9,10 @@ import requests
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
-from gohl.classes.conversations_messages import ConversationsMessages  # noqa: E402
+from gohl.classes.conversations_messages import (  # noqa: E402
+    ConversationsMessages,
+    MessageType,
+)
 
 
 AUTH = {
@@ -136,13 +139,13 @@ class GetAllTests(unittest.TestCase, _AuthValidationMixin):
 
 class AddTests(unittest.TestCase, _AuthValidationMixin):
     def _call(self, messages):
-        return messages.add("conv_1", {"body": "hi", "type": "text"})
+        return messages.add("conv_1", {"body": "hi", "type": "SMS"})
 
     @patch("gohl.classes.conversations_messages.requests.post")
     def test_sends_expected_request_and_returns_message(self, mock_post):
         message = {
             "body": "Hello! How can I help you today?",
-            "type": "text",
+            "type": "SMS",
             "attachments": [{"url": "https://example.com/file.pdf"}],
             "metadata": {"key": "value"},
         }
@@ -163,7 +166,7 @@ class AddTests(unittest.TestCase, _AuthValidationMixin):
     @patch("gohl.classes.conversations_messages.requests.post")
     def test_forwards_message_payload_unchanged(self, mock_post):
         mock_post.return_value = _mock_response({"message": {"id": "m1"}})
-        message = {"body": "minimal", "type": "text"}
+        message = {"body": "minimal", "type": "SMS"}
 
         ConversationsMessages(AUTH).add("conv_1", message)
 
@@ -175,14 +178,37 @@ class AddTests(unittest.TestCase, _AuthValidationMixin):
         mock_post.return_value = _mock_response({})
 
         with self.assertRaises(KeyError):
-            ConversationsMessages(AUTH).add("conv_1", {"body": "hi", "type": "text"})
+            ConversationsMessages(AUTH).add("conv_1", {"body": "hi", "type": "SMS"})
 
     @patch("gohl.classes.conversations_messages.requests.post")
     def test_propagates_http_error(self, mock_post):
         mock_post.return_value = _http_error_response(400)
 
         with self.assertRaises(requests.exceptions.HTTPError):
+            ConversationsMessages(AUTH).add("conv_1", {"body": "hi", "type": "SMS"})
+
+    @patch("gohl.classes.conversations_messages.requests.post")
+    def test_raises_for_invalid_type(self, mock_post):
+        with self.assertRaises(ValueError):
             ConversationsMessages(AUTH).add("conv_1", {"body": "hi", "type": "text"})
+        mock_post.assert_not_called()
+
+    @patch("gohl.classes.conversations_messages.requests.post")
+    def test_raises_when_type_missing(self, mock_post):
+        with self.assertRaises(ValueError):
+            ConversationsMessages(AUTH).add("conv_1", {"body": "hi"})
+        mock_post.assert_not_called()
+
+    @patch("gohl.classes.conversations_messages.requests.post")
+    def test_accepts_message_type_enum_member(self, mock_post):
+        mock_post.return_value = _mock_response({"message": {"id": "m1"}})
+
+        ConversationsMessages(AUTH).add(
+            "conv_1", {"body": "hi", "type": MessageType.EMAIL}
+        )
+
+        _, kwargs = mock_post.call_args
+        self.assertEqual(kwargs["json"]["type"], MessageType.EMAIL)
 
 
 class AddInboundTests(unittest.TestCase, _AuthValidationMixin):
@@ -257,6 +283,31 @@ class AddInboundTests(unittest.TestCase, _AuthValidationMixin):
             ConversationsMessages(AUTH).add_inbound(
                 {"type": "SMS", "conversationId": "conv_1"}
             )
+
+    @patch("gohl.classes.conversations_messages.requests.post")
+    def test_raises_for_invalid_type(self, mock_post):
+        with self.assertRaises(ValueError):
+            ConversationsMessages(AUTH).add_inbound(
+                {"type": "text", "conversationId": "conv_1"}
+            )
+        mock_post.assert_not_called()
+
+    @patch("gohl.classes.conversations_messages.requests.post")
+    def test_raises_when_type_missing(self, mock_post):
+        with self.assertRaises(ValueError):
+            ConversationsMessages(AUTH).add_inbound({"conversationId": "conv_1"})
+        mock_post.assert_not_called()
+
+    @patch("gohl.classes.conversations_messages.requests.post")
+    def test_accepts_message_type_enum_member(self, mock_post):
+        mock_post.return_value = _mock_response({"messageId": "m1"})
+
+        ConversationsMessages(AUTH).add_inbound(
+            {"type": MessageType.WHATSAPP, "conversationId": "conv_1"}
+        )
+
+        _, kwargs = mock_post.call_args
+        self.assertEqual(kwargs["json"]["type"], MessageType.WHATSAPP)
 
 
 if __name__ == "__main__":

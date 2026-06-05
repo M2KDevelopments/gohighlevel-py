@@ -4,14 +4,46 @@ This module provides the ConversationsMessages class for managing messages
 within conversations in GoHighLevel.
 """
 
-from typing import Dict, List, Optional, TypedDict
+from enum import Enum
+from typing import Dict, List, Optional, TypedDict, Union
 import requests
+
+
+class MessageType(str, Enum):
+    """Allowed message channel types for the conversations API."""
+    SMS = "SMS"
+    EMAIL = "Email"
+    WHATSAPP = "WhatsApp"
+    GMB = "GMB"
+    IG = "IG"
+    FB = "FB"
+    CUSTOM = "Custom"
+    LIVE_CHAT = "Live_Chat"
+    CALL = "Call"
+
+
+def _validate_message_type(message: Dict) -> None:
+    """Validate that ``message['type']`` is a known :class:`MessageType`.
+
+    Accepts either a ``MessageType`` member or its string value.
+
+    Raises:
+        ValueError: If ``type`` is missing or not a valid message type.
+    """
+    type_value = message.get("type")
+    if type_value is None:
+        raise ValueError("Message 'type' is required")
+    if type_value not in {t.value for t in MessageType}:
+        valid = ", ".join(sorted(t.value for t in MessageType))
+        raise ValueError(
+            f"Invalid message type {type_value!r}. Must be one of: {valid}"
+        )
 
 
 class MessageData(TypedDict, total=False):
     """Type definition for message data."""
     body: str
-    type: str  # 'text', 'image', 'file', etc.
+    type: Union[MessageType, str]
     attachments: List[Dict]
     metadata: Dict
 
@@ -22,7 +54,7 @@ class InboundMessageData(TypedDict, total=False):
     Either ``conversationId`` or ``contactId`` is required, along with
     ``type`` and ``conversationProviderId``.
     """
-    type: str  # 'SMS', 'Email', 'WhatsApp', 'GMB', 'IG', 'FB', 'Custom', 'Live_Chat', 'Call'
+    type: Union[MessageType, str]
     conversationId: str
     contactId: str
     conversationProviderId: str
@@ -98,7 +130,7 @@ class ConversationsMessages:
                 Example:
                 {
                     "body": "Hello! How can I help you today?",
-                    "type": "text",
+                    "type": "SMS",
                     "attachments": [{"url": "https://example.com/file.pdf"}],
                     "metadata": {"key": "value"}
                 }
@@ -108,10 +140,12 @@ class ConversationsMessages:
 
         Raises:
             requests.exceptions.RequestException: If the API request fails
-            ValueError: If authentication data is missing
+            ValueError: If authentication data is missing or ``type`` is invalid
         """
         if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
             raise ValueError("Authentication data is required")
+
+        _validate_message_type(message)
 
         response = requests.post(
             f"{self.auth_data['baseurl']}/conversations/{conversation_id}/messages",
@@ -148,10 +182,12 @@ class ConversationsMessages:
 
         Raises:
             requests.exceptions.RequestException: If the API request fails
-            ValueError: If authentication data is missing
+            ValueError: If authentication data is missing or ``type`` is invalid
         """
         if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
             raise ValueError("Authentication data is required")
+
+        _validate_message_type(message)
 
         response = requests.post(
             f"{self.auth_data['baseurl']}/conversations/messages/inbound",

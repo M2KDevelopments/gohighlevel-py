@@ -6,6 +6,7 @@ in GoHighLevel, including user management and permissions.
 
 from typing import Dict, List, Optional, TypedDict
 import requests
+from .auth.authdata import Auth
 
 
 class UserProfile(TypedDict, total=False):
@@ -27,7 +28,7 @@ class Users:
     creating, updating, and managing user permissions.
     """
 
-    def __init__(self, auth_data: Optional[Dict] = None) -> None:
+    def __init__(self, auth_data: Optional[Auth] = None):
         """Initialize the Users class.
 
         Args:
@@ -55,7 +56,7 @@ class Users:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         params = {
@@ -65,9 +66,9 @@ class Users:
         }
 
         response = requests.get(
-            f"{self.auth_data['baseurl']}/users",
+            f"{self.auth_data.baseurl}/users",
             params=params,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['users']
@@ -85,12 +86,12 @@ class Users:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.get(
-            f"{self.auth_data['baseurl']}/users/{user_id}",
-            headers=self.auth_data['headers']
+            f"{self.auth_data.baseurl}/users/{user_id}",
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['user']
@@ -126,7 +127,7 @@ class Users:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         data = {
@@ -135,9 +136,9 @@ class Users:
         }
 
         response = requests.post(
-            f"{self.auth_data['baseurl']}/users",
+            f"{self.auth_data.baseurl}/users",
             json=data,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['user']
@@ -163,13 +164,13 @@ class Users:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.put(
-            f"{self.auth_data['baseurl']}/users/{user_id}",
+            f"{self.auth_data.baseurl}/users/{user_id}",
             json=data,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['user']
@@ -187,12 +188,12 @@ class Users:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.delete(
-            f"{self.auth_data['baseurl']}/users/{user_id}",
-            headers=self.auth_data['headers']
+            f"{self.auth_data.baseurl}/users/{user_id}",
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()
@@ -216,15 +217,15 @@ class Users:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         data = {'permissions': permissions}
 
         response = requests.put(
-            f"{self.auth_data['baseurl']}/users/{user_id}/permissions",
+            f"{self.auth_data.baseurl}/users/{user_id}/permissions",
             json=data,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['permissions']
@@ -253,7 +254,7 @@ class Users:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         params = {
@@ -266,9 +267,9 @@ class Users:
             params['endDate'] = end_date
 
         response = requests.get(
-            f"{self.auth_data['baseurl']}/users/{user_id}/activity",
+            f"{self.auth_data.baseurl}/users/{user_id}/activity",
             params=params,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['activities']
@@ -286,12 +287,12 @@ class Users:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.post(
-            f"{self.auth_data['baseurl']}/users/{user_id}/reset-password",
-            headers=self.auth_data['headers']
+            f"{self.auth_data.baseurl}/users/{user_id}/reset-password",
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json() 

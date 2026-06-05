@@ -6,6 +6,7 @@ as well as managing block slots.
 """
 
 import requests
+from .auth.authdata import Auth
 from typing import Dict, List, Optional, TypedDict, Union
 
 
@@ -25,7 +26,7 @@ class CalendarEvent:
     including CRUD operations and specialized functionality like managing block slots.
     """
 
-    def __init__(self, auth_data: Optional[Dict] = None) -> None:
+    def __init__(self, auth_data: Optional[Auth] = None):
         """Initialize the CalendarEvent class.
 
         Args:
@@ -55,7 +56,7 @@ class CalendarEvent:
         Raises:
             requests.exceptions.RequestException: If the API request fails
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         params = {
@@ -73,9 +74,9 @@ class CalendarEvent:
                 params['calendarId'] = extra['calendarId']
 
         response = requests.get(
-            f"{self.auth_data['baseurl']}/calendars/events",
+            f"{self.auth_data.baseurl}/calendars/events",
             params=params,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['events']
@@ -102,7 +103,7 @@ class CalendarEvent:
         Raises:
             requests.exceptions.RequestException: If the API request fails
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         params = {
@@ -120,9 +121,9 @@ class CalendarEvent:
                 params['calendarId'] = extra['calendarId']
 
         response = requests.get(
-            f"{self.auth_data['baseurl']}/calendars/blocked-slots",
+            f"{self.auth_data.baseurl}/calendars/blocked-slots",
             params=params,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['events']
@@ -140,12 +141,12 @@ class CalendarEvent:
         Raises:
             requests.exceptions.RequestException: If the API request fails
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.get(
-            f"{self.auth_data['baseurl']}/calendars/events/appointments/{event_id}",
-            headers=self.auth_data['headers']
+            f"{self.auth_data.baseurl}/calendars/events/appointments/{event_id}",
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['event']
@@ -171,7 +172,7 @@ class CalendarEvent:
         Raises:
             requests.exceptions.RequestException: If the API request fails
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         data = {
@@ -182,9 +183,9 @@ class CalendarEvent:
         }
 
         response = requests.post(
-            f"{self.auth_data['baseurl']}/calendars/events/appointments",
+            f"{self.auth_data.baseurl}/calendars/events/appointments",
             json=data,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()
@@ -202,13 +203,13 @@ class CalendarEvent:
         Raises:
             requests.exceptions.RequestException: If the API request fails
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.put(
-            f"{self.auth_data['baseurl']}/calendars/events/appointments/{event_id}",
+            f"{self.auth_data.baseurl}/calendars/events/appointments/{event_id}",
             json=event,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()
@@ -226,11 +227,11 @@ class CalendarEvent:
         Raises:
             requests.exceptions.RequestException: If the API request fails
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.put(
-            f"{self.auth_data['baseurl']}/calendars/events/block-slots/{event_id}",
+            f"{self.auth_data.baseurl}/calendars/events/block-slots/{event_id}",
             json={
                 'calendarId': slot['calendar_id'],
                 'startTime': slot['start_time'],
@@ -238,7 +239,7 @@ class CalendarEvent:
                 'title': slot['title'],
                 'assignedUserId': slot['assigned_user_id']
             },
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return BlockSlot(**response.json())
@@ -255,12 +256,12 @@ class CalendarEvent:
         Raises:
             requests.exceptions.RequestException: If the API request fails
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.delete(
-            f"{self.auth_data['baseurl']}/calendars/events/{event_id}",
-            headers=self.auth_data['headers']
+            f"{self.auth_data.baseurl}/calendars/events/{event_id}",
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['succeeded'] 

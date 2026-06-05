@@ -6,6 +6,7 @@ in GoHighLevel.
 
 from typing import Dict, List, Optional, TypedDict, Union
 import requests
+from .auth.authdata import Auth
 
 
 class CustomFieldType(TypedDict, total=False):
@@ -32,7 +33,7 @@ class CustomFields:
     updating, and retrieving custom fields for various entities.
     """
 
-    def __init__(self, auth_data: Optional[Dict] = None) -> None:
+    def __init__(self, auth_data: Optional[Auth] = None):
         """Initialize the CustomFields class.
 
         Args:
@@ -62,7 +63,7 @@ class CustomFields:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         params = {
@@ -73,9 +74,9 @@ class CustomFields:
         }
 
         response = requests.get(
-            f"{self.auth_data['baseurl']}/custom-fields",
+            f"{self.auth_data.baseurl}/custom-fields",
             params=params,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['customFields']
@@ -93,12 +94,12 @@ class CustomFields:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.get(
-            f"{self.auth_data['baseurl']}/custom-fields/{field_id}",
-            headers=self.auth_data['headers']
+            f"{self.auth_data.baseurl}/custom-fields/{field_id}",
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['customField']
@@ -136,7 +137,7 @@ class CustomFields:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         data = {
@@ -146,9 +147,9 @@ class CustomFields:
         }
 
         response = requests.post(
-            f"{self.auth_data['baseurl']}/custom-fields",
+            f"{self.auth_data.baseurl}/custom-fields",
             json=data,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['customField']
@@ -173,13 +174,13 @@ class CustomFields:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.put(
-            f"{self.auth_data['baseurl']}/custom-fields/{field_id}",
+            f"{self.auth_data.baseurl}/custom-fields/{field_id}",
             json=data,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['customField']
@@ -197,12 +198,12 @@ class CustomFields:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.delete(
-            f"{self.auth_data['baseurl']}/custom-fields/{field_id}",
-            headers=self.auth_data['headers']
+            f"{self.auth_data.baseurl}/custom-fields/{field_id}",
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()
@@ -225,7 +226,7 @@ class CustomFields:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         params = {
@@ -234,9 +235,9 @@ class CustomFields:
         }
 
         response = requests.get(
-            f"{self.auth_data['baseurl']}/custom-fields/values",
+            f"{self.auth_data.baseurl}/custom-fields/values",
             params=params,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['values']
@@ -267,7 +268,7 @@ class CustomFields:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         data = {
@@ -277,9 +278,9 @@ class CustomFields:
         }
 
         response = requests.put(
-            f"{self.auth_data['baseurl']}/custom-fields/values",
+            f"{self.auth_data.baseurl}/custom-fields/values",
             json=data,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['values'] 

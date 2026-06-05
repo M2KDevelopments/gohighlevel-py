@@ -6,6 +6,7 @@ in GoHighLevel, including questions, responses, and analytics.
 
 from typing import Dict, List, Optional, TypedDict
 import requests
+from .auth.authdata import Auth
 
 
 class SurveyQuestion(TypedDict, total=False):
@@ -33,7 +34,7 @@ class Surveys:
     updating, and analyzing survey responses.
     """
 
-    def __init__(self, auth_data: Optional[Dict] = None) -> None:
+    def __init__(self, auth_data: Optional[Auth] = None):
         """Initialize the Surveys class.
 
         Args:
@@ -61,7 +62,7 @@ class Surveys:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         params = {
@@ -71,9 +72,9 @@ class Surveys:
         }
 
         response = requests.get(
-            f"{self.auth_data['baseurl']}/surveys",
+            f"{self.auth_data.baseurl}/surveys",
             params=params,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['surveys']
@@ -91,12 +92,12 @@ class Surveys:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.get(
-            f"{self.auth_data['baseurl']}/surveys/submissions/",
-            headers=self.auth_data['headers']
+            f"{self.auth_data.baseurl}/surveys/submissions/",
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['submissions']

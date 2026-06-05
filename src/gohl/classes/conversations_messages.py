@@ -7,6 +7,7 @@ within conversations in GoHighLevel.
 from enum import Enum
 from typing import Dict, List, Optional, TypedDict, Union
 import requests
+from .auth.authdata import Auth
 
 
 class MessageType(str, Enum):
@@ -77,7 +78,7 @@ class ConversationsMessages:
     including retrieving and sending messages.
     """
 
-    def __init__(self, auth_data: Optional[Dict] = None) -> None:
+    def __init__(self, auth_data: Optional[Auth] = None):
         """Initialize the ConversationsMessages class.
 
         Args:
@@ -105,7 +106,7 @@ class ConversationsMessages:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         params = {
@@ -114,9 +115,9 @@ class ConversationsMessages:
         }
 
         response = requests.get(
-            f"{self.auth_data['baseurl']}/conversations/{conversation_id}/messages",
+            f"{self.auth_data.baseurl}/conversations/{conversation_id}/messages",
             params=params,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['messages']
@@ -142,15 +143,15 @@ class ConversationsMessages:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing or ``type`` is invalid
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         _validate_message_type(message)
 
         response = requests.post(
-            f"{self.auth_data['baseurl']}/conversations/{conversation_id}/messages",
+            f"{self.auth_data.baseurl}/conversations/{conversation_id}/messages",
             json=message,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['message']
@@ -184,15 +185,15 @@ class ConversationsMessages:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing or ``type`` is invalid
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         _validate_message_type(message)
 
         response = requests.post(
-            f"{self.auth_data['baseurl']}/conversations/messages/inbound",
+            f"{self.auth_data.baseurl}/conversations/messages/inbound",
             json=message,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()

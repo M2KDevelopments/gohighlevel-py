@@ -6,6 +6,7 @@ providers in GoHighLevel.
 
 from typing import Dict, List, Optional, TypedDict
 import requests
+from .auth.authdata import Auth
 
 
 class ProviderFilter(TypedDict, total=False):
@@ -21,7 +22,7 @@ class ConversationsProviders:
     including retrieving and updating provider settings.
     """
 
-    def __init__(self, auth_data: Optional[Dict] = None) -> None:
+    def __init__(self, auth_data: Optional[Auth] = None):
         """Initialize the ConversationsProviders class.
 
         Args:
@@ -48,7 +49,7 @@ class ConversationsProviders:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         params = {'locationId': location_id}
@@ -56,9 +57,9 @@ class ConversationsProviders:
             params.update(filters)
 
         response = requests.get(
-            f"{self.auth_data['baseurl']}/conversations/providers",
+            f"{self.auth_data.baseurl}/conversations/providers",
             params=params,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['providers']
@@ -76,12 +77,12 @@ class ConversationsProviders:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.get(
-            f"{self.auth_data['baseurl']}/conversations/providers/{provider_id}",
-            headers=self.auth_data['headers']
+            f"{self.auth_data.baseurl}/conversations/providers/{provider_id}",
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['provider']
@@ -108,13 +109,13 @@ class ConversationsProviders:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.put(
-            f"{self.auth_data['baseurl']}/conversations/providers/{provider_id}",
+            f"{self.auth_data.baseurl}/conversations/providers/{provider_id}",
             json=data,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['provider'] 

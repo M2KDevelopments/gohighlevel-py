@@ -6,6 +6,7 @@ in GoHighLevel, including details, settings, and branding.
 
 from typing import Dict, List, Optional, TypedDict
 import requests
+from .auth.authdata import Auth
 
 
 class LocationSettings(TypedDict, total=False):
@@ -28,7 +29,7 @@ class Location:
     updating, and retrieving location details and settings.
     """
 
-    def __init__(self, auth_data: Optional[Dict] = None) -> None:
+    def __init__(self, auth_data: Optional[Auth] = None):
         """Initialize the Location class.
 
         Args:
@@ -50,7 +51,7 @@ class Location:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         params = {
@@ -59,9 +60,9 @@ class Location:
         }
 
         response = requests.get(
-            f"{self.auth_data['baseurl']}/locations",
+            f"{self.auth_data.baseurl}/locations",
             params=params,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['locations']
@@ -79,12 +80,12 @@ class Location:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.get(
-            f"{self.auth_data['baseurl']}/locations/{location_id}",
-            headers=self.auth_data['headers']
+            f"{self.auth_data.baseurl}/locations/{location_id}",
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['location']
@@ -120,13 +121,13 @@ class Location:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.post(
-            f"{self.auth_data['baseurl']}/locations",
+            f"{self.auth_data.baseurl}/locations",
             json=settings,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['location']
@@ -153,13 +154,13 @@ class Location:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.put(
-            f"{self.auth_data['baseurl']}/locations/{location_id}",
+            f"{self.auth_data.baseurl}/locations/{location_id}",
             json=data,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['location']
@@ -177,12 +178,12 @@ class Location:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.delete(
-            f"{self.auth_data['baseurl']}/locations/{location_id}",
-            headers=self.auth_data['headers']
+            f"{self.auth_data.baseurl}/locations/{location_id}",
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()
@@ -200,12 +201,12 @@ class Location:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.get(
-            f"{self.auth_data['baseurl']}/locations/{location_id}/settings",
-            headers=self.auth_data['headers']
+            f"{self.auth_data.baseurl}/locations/{location_id}/settings",
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['settings']
@@ -233,13 +234,13 @@ class Location:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.put(
-            f"{self.auth_data['baseurl']}/locations/{location_id}/settings",
+            f"{self.auth_data.baseurl}/locations/{location_id}/settings",
             json=settings,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['settings'] 

@@ -7,6 +7,7 @@ including operations like getting, updating, and searching conversations.
 from typing import Dict, List, Optional, TypedDict, Union
 import requests
 
+from .auth.authdata import Auth
 from .conversations_email import ConversationsEmail
 from .conversations_messages import ConversationsMessages
 from .conversations_providers import ConversationsProviders
@@ -31,7 +32,7 @@ class Conversations:
     for retrieving, updating, and searching conversations.
     """
 
-    def __init__(self, auth_data: Optional[Dict] = None) -> None:
+    def __init__(self, auth_data: Optional[Auth] = None):
         """Initialize the Conversations class.
 
         Args:
@@ -61,7 +62,7 @@ class Conversations:
         Raises:
             requests.exceptions.RequestException: If the API request fails
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         params = {
@@ -71,9 +72,9 @@ class Conversations:
         }
 
         response = requests.get(
-            f"{self.auth_data['baseurl']}/conversations",
+            f"{self.auth_data.baseurl}/conversations",
             params=params,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['conversations']
@@ -90,12 +91,12 @@ class Conversations:
         Raises:
             requests.exceptions.RequestException: If the API request fails
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.get(
-            f"{self.auth_data['baseurl']}/conversations/{conversation_id}",
-            headers=self.auth_data['headers']
+            f"{self.auth_data.baseurl}/conversations/{conversation_id}",
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['conversation']
@@ -115,7 +116,7 @@ class Conversations:
         Raises:
             requests.exceptions.RequestException: If the API request fails
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         data = {
@@ -124,9 +125,9 @@ class Conversations:
         }
 
         response = requests.post(
-            f"{self.auth_data['baseurl']}/conversations/",
+            f"{self.auth_data.baseurl}/conversations/",
             json=data,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['conversation']
@@ -144,13 +145,13 @@ class Conversations:
         Raises:
             requests.exceptions.RequestException: If the API request fails
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.put(
-            f"{self.auth_data['baseurl']}/conversations/{conversation_id}",
+            f"{self.auth_data.baseurl}/conversations/{conversation_id}",
             json=data,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['conversation']
@@ -175,7 +176,7 @@ class Conversations:
         Raises:
             requests.exceptions.RequestException: If the API request fails
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         data = {
@@ -186,9 +187,9 @@ class Conversations:
             data['filters'] = filters
 
         response = requests.post(
-            f"{self.auth_data['baseurl']}/conversations/search",
+            f"{self.auth_data.baseurl}/conversations/search",
             json=data,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['conversations'] 

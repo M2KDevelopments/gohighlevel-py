@@ -6,6 +6,7 @@ in GoHighLevel, including URL redirects and conditional routing.
 
 from typing import Dict, List, Optional, TypedDict
 import requests
+from .auth.authdata import Auth
 
 
 class RedirectRule(TypedDict, total=False):
@@ -26,7 +27,7 @@ class FunnelsRedirect:
     updating, and retrieving redirect rules.
     """
 
-    def __init__(self, auth_data: Optional[Dict] = None) -> None:
+    def __init__(self, auth_data: Optional[Auth] = None):
         """Initialize the FunnelsRedirect class.
 
         Args:
@@ -54,7 +55,7 @@ class FunnelsRedirect:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         params = {
@@ -63,9 +64,9 @@ class FunnelsRedirect:
         }
 
         response = requests.get(
-            f"{self.auth_data['baseurl']}/funnels/{funnel_id}/redirects",
+            f"{self.auth_data.baseurl}/funnels/{funnel_id}/redirects",
             params=params,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['redirects']
@@ -84,12 +85,12 @@ class FunnelsRedirect:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.get(
-            f"{self.auth_data['baseurl']}/funnels/{funnel_id}/redirects/{redirect_id}",
-            headers=self.auth_data['headers']
+            f"{self.auth_data.baseurl}/funnels/{funnel_id}/redirects/{redirect_id}",
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['redirect']
@@ -124,13 +125,13 @@ class FunnelsRedirect:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.post(
-            f"{self.auth_data['baseurl']}/funnels/{funnel_id}/redirects",
+            f"{self.auth_data.baseurl}/funnels/{funnel_id}/redirects",
             json=rule,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['redirect']
@@ -156,13 +157,13 @@ class FunnelsRedirect:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.put(
-            f"{self.auth_data['baseurl']}/funnels/{funnel_id}/redirects/{redirect_id}",
+            f"{self.auth_data.baseurl}/funnels/{funnel_id}/redirects/{redirect_id}",
             json=data,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['redirect']
@@ -181,12 +182,12 @@ class FunnelsRedirect:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.delete(
-            f"{self.auth_data['baseurl']}/funnels/{funnel_id}/redirects/{redirect_id}",
-            headers=self.auth_data['headers']
+            f"{self.auth_data.baseurl}/funnels/{funnel_id}/redirects/{redirect_id}",
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()
@@ -217,13 +218,13 @@ class FunnelsRedirect:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.post(
-            f"{self.auth_data['baseurl']}/funnels/{funnel_id}/redirects/{redirect_id}/test",
+            f"{self.auth_data.baseurl}/funnels/{funnel_id}/redirects/{redirect_id}/test",
             json=test_data,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['result']
@@ -250,7 +251,7 @@ class FunnelsRedirect:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         params = {
@@ -259,9 +260,9 @@ class FunnelsRedirect:
         }
 
         response = requests.get(
-            f"{self.auth_data['baseurl']}/funnels/{funnel_id}/redirects/{redirect_id}/analytics",
+            f"{self.auth_data.baseurl}/funnels/{funnel_id}/redirects/{redirect_id}/analytics",
             params=params,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['analytics'] 

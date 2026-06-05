@@ -7,6 +7,7 @@ managing group status and slug validation.
 
 from typing import Dict, List, Optional
 import requests
+from .auth.authdata import Auth
 
 
 class CalendarGroup:
@@ -16,7 +17,7 @@ class CalendarGroup:
     and specialized functionality like slug validation and group status management.
     """
 
-    def __init__(self, auth_data: Optional[Dict] = None) -> None:
+    def __init__(self, auth_data: Optional[Auth] = None):
         """Initialize the CalendarGroup class.
 
         Args:
@@ -33,12 +34,12 @@ class CalendarGroup:
         Raises:
             requests.exceptions.RequestException: If the API request fails
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.get(
-            f"{self.auth_data['baseurl']}/calendars/groups",
-            headers=self.auth_data['headers']
+            f"{self.auth_data.baseurl}/calendars/groups",
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['calendars']
@@ -55,12 +56,12 @@ class CalendarGroup:
         Raises:
             requests.exceptions.RequestException: If the API request fails
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.get(
-            f"{self.auth_data['baseurl']}/calendars/{calendar_id}",
-            headers=self.auth_data['headers']
+            f"{self.auth_data.baseurl}/calendars/{calendar_id}",
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['calendar']
@@ -78,13 +79,13 @@ class CalendarGroup:
         Raises:
             requests.exceptions.RequestException: If the API request fails
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.post(
-            f"{self.auth_data['baseurl']}/calendars/groups/validate-slug",
+            f"{self.auth_data.baseurl}/calendars/groups/validate-slug",
             json={'locationId': location_id, 'slug': slug},
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['available']
@@ -101,13 +102,13 @@ class CalendarGroup:
         Raises:
             requests.exceptions.RequestException: If the API request fails
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.post(
-            f"{self.auth_data['baseurl']}/calendars/groups",
+            f"{self.auth_data.baseurl}/calendars/groups",
             json=calendar_group,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['group']
@@ -127,17 +128,17 @@ class CalendarGroup:
         Raises:
             requests.exceptions.RequestException: If the API request fails
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.put(
-            f"{self.auth_data['baseurl']}/calendars/groups/{group_id}",
+            f"{self.auth_data.baseurl}/calendars/groups/{group_id}",
             json={
                 'name': name,
                 'description': description,
                 'slug': slug
             },
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['group']
@@ -154,12 +155,12 @@ class CalendarGroup:
         Raises:
             requests.exceptions.RequestException: If the API request fails
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.delete(
-            f"{self.auth_data['baseurl']}/calendars/groups/{group_id}",
-            headers=self.auth_data['headers']
+            f"{self.auth_data.baseurl}/calendars/groups/{group_id}",
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['succeeded']
@@ -177,13 +178,13 @@ class CalendarGroup:
         Raises:
             requests.exceptions.RequestException: If the API request fails
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.put(
-            f"{self.auth_data['baseurl']}/calendars/groups/{group_id}/status",
+            f"{self.auth_data.baseurl}/calendars/groups/{group_id}/status",
             json={'isActive': is_active},
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['success'] 

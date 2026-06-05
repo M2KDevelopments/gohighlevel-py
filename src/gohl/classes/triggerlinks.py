@@ -6,6 +6,7 @@ in GoHighLevel, including creation, tracking, and analytics.
 
 from typing import Dict, List, Optional, TypedDict
 import requests
+from .auth.authdata import Auth
 
 
 class TriggerLinkConfig(TypedDict, total=False):
@@ -26,7 +27,7 @@ class TriggerLinks:
     creating, tracking, and analyzing link performance.
     """
 
-    def __init__(self, auth_data: Optional[Dict] = None) -> None:
+    def __init__(self, auth_data: Optional[Auth] = None):
         """Initialize the TriggerLinks class.
 
         Args:
@@ -54,7 +55,7 @@ class TriggerLinks:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         params = {
@@ -64,9 +65,9 @@ class TriggerLinks:
         }
 
         response = requests.get(
-            f"{self.auth_data['baseurl']}/triggerlinks",
+            f"{self.auth_data.baseurl}/triggerlinks",
             params=params,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['triggerLinks']
@@ -84,12 +85,12 @@ class TriggerLinks:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.get(
-            f"{self.auth_data['baseurl']}/triggerlinks/{link_id}",
-            headers=self.auth_data['headers']
+            f"{self.auth_data.baseurl}/triggerlinks/{link_id}",
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['triggerLink']
@@ -121,7 +122,7 @@ class TriggerLinks:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         data = {
@@ -130,9 +131,9 @@ class TriggerLinks:
         }
 
         response = requests.post(
-            f"{self.auth_data['baseurl']}/triggerlinks",
+            f"{self.auth_data.baseurl}/triggerlinks",
             json=data,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['triggerLink']
@@ -159,13 +160,13 @@ class TriggerLinks:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.put(
-            f"{self.auth_data['baseurl']}/triggerlinks/{link_id}",
+            f"{self.auth_data.baseurl}/triggerlinks/{link_id}",
             json=data,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['triggerLink']
@@ -183,12 +184,12 @@ class TriggerLinks:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.delete(
-            f"{self.auth_data['baseurl']}/triggerlinks/{link_id}",
-            headers=self.auth_data['headers']
+            f"{self.auth_data.baseurl}/triggerlinks/{link_id}",
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()
@@ -213,7 +214,7 @@ class TriggerLinks:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         params = {}
@@ -223,9 +224,9 @@ class TriggerLinks:
             params['endDate'] = end_date
 
         response = requests.get(
-            f"{self.auth_data['baseurl']}/triggerlinks/{link_id}/analytics",
+            f"{self.auth_data.baseurl}/triggerlinks/{link_id}/analytics",
             params=params,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['analytics']
@@ -250,7 +251,7 @@ class TriggerLinks:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         params = {
@@ -259,9 +260,9 @@ class TriggerLinks:
         }
 
         response = requests.get(
-            f"{self.auth_data['baseurl']}/triggerlinks/{link_id}/clicks",
+            f"{self.auth_data.baseurl}/triggerlinks/{link_id}/clicks",
             params=params,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['clicks'] 

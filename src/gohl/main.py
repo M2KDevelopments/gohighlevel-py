@@ -6,7 +6,6 @@ including authentication, OAuth flow, and access to all API endpoints.
 
 from .classes.auth.authdata import Auth
 from .classes.auth.credentials import Credentials
-from .classes.blogs import Blog
 from .classes.business import Business
 from .classes.calendars import Calendar
 from .classes.campaigns import CampaignAPI
@@ -106,7 +105,6 @@ class GoHighLevel:
         self.businesses = Business(self.auth_data)
         self.workflows = Workflow(self.auth_data)
         self.surveys = Surveys(self.auth_data)
-        self.blogs = Blog(self.auth_data)
         self.forms = Form(self.auth_data)
         self.subaccounts = SubAccounts(self.auth_data)
         self.agency = {

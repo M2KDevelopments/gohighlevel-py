@@ -39,7 +39,7 @@ class Auth:
         self.baseurl = baseurl
         self.scope = scope
         self.headers = headers or {
-            'Version': '2021-04-15',
+            'Version': '2021-07-28',
             'Authorization': f'Bearer {access_token}',
             'Accept': 'application/json'
         } 

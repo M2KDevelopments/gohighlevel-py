@@ -16,6 +16,28 @@ class MessageData(TypedDict, total=False):
     metadata: Dict
 
 
+class InboundMessageData(TypedDict, total=False):
+    """Type definition for an inbound message.
+
+    Either ``conversationId`` or ``contactId`` is required, along with
+    ``type`` and ``conversationProviderId``.
+    """
+    type: str  # 'SMS', 'Email', 'WhatsApp', 'GMB', 'IG', 'FB', 'Custom', 'Live_Chat', 'Call'
+    conversationId: str
+    contactId: str
+    conversationProviderId: str
+    message: str
+    attachments: List[str]
+    html: str
+    subject: str
+    emailFrom: str
+    emailTo: str
+    date: str
+    call: Dict
+    altId: str
+    direction: str
+
+
 class ConversationsMessages:
     """Messages management class for conversations in GoHighLevel API.
 
@@ -32,10 +54,10 @@ class ConversationsMessages:
         self.auth_data = auth_data
 
     def get_all(
-        self,
-        conversation_id: str,
-        limit: int = 50,
-        skip: int = 0
+            self,
+            conversation_id: str,
+            limit: int = 50,
+            skip: int = 0
     ) -> List[Dict]:
         """Get all messages in a conversation.
 
@@ -97,4 +119,44 @@ class ConversationsMessages:
             headers=self.auth_data['headers']
         )
         response.raise_for_status()
-        return response.json()['message'] 
+        return response.json()['message']
+
+    def add_inbound(self, message: InboundMessageData) -> Dict:
+        """Add an inbound message to a conversation.
+
+        See https://marketplace.gohighlevel.com/docs/ghl/conversations/add-an-inbound-message
+
+        Unlike :meth:`add`, the target is identified inside the payload
+        (``conversationId`` or ``contactId``) rather than in the URL.
+
+        Args:
+            message (InboundMessageData): Inbound message payload. Requires
+                ``type`` and ``conversationProviderId``, plus either
+                ``conversationId`` or ``contactId``.
+                Example:
+                {
+                    "type": "SMS",
+                    "conversationId": "conv_1",
+                    "conversationProviderId": "provider_1",
+                    "message": "Hello! How can I help you today?",
+                    "attachments": ["https://example.com/file.pdf"]
+                }
+
+        Returns:
+            Dict: Response describing the created message (``conversationId``,
+                ``messageId``, etc.)
+
+        Raises:
+            requests.exceptions.RequestException: If the API request fails
+            ValueError: If authentication data is missing
+        """
+        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+            raise ValueError("Authentication data is required")
+
+        response = requests.post(
+            f"{self.auth_data['baseurl']}/conversations/messages/inbound",
+            json=message,
+            headers=self.auth_data['headers']
+        )
+        response.raise_for_status()
+        return response.json()

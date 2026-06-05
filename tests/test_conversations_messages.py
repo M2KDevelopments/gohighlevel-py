@@ -185,5 +185,79 @@ class AddTests(unittest.TestCase, _AuthValidationMixin):
             ConversationsMessages(AUTH).add("conv_1", {"body": "hi", "type": "text"})
 
 
+class AddInboundTests(unittest.TestCase, _AuthValidationMixin):
+    def _call(self, messages):
+        return messages.add_inbound(
+            {"type": "SMS", "conversationId": "conv_1", "message": "hi"}
+        )
+
+    @patch("gohl.classes.conversations_messages.requests.post")
+    def test_sends_expected_request_and_returns_response(self, mock_post):
+        message = {
+            "type": "SMS",
+            "conversationId": "conv_1",
+            "conversationProviderId": "provider_1",
+            "message": "Hello! How can I help you today?",
+            "attachments": ["https://example.com/file.pdf"],
+        }
+        body = {
+            "conversationId": "conv_1",
+            "messageId": "m_new",
+            "message": "Message added successfully",
+        }
+        mock_post.return_value = _mock_response(body)
+
+        result = ConversationsMessages(AUTH).add_inbound(message)
+
+        mock_post.assert_called_once_with(
+            f"{AUTH['baseurl']}/conversations/messages/inbound",
+            json=message,
+            headers=AUTH["headers"],
+        )
+        self.assertEqual(result, body)
+
+    @patch("gohl.classes.conversations_messages.requests.post")
+    def test_targets_inbound_endpoint_not_nested_path(self, mock_post):
+        mock_post.return_value = _mock_response({"messageId": "m1"})
+
+        ConversationsMessages(AUTH).add_inbound({"type": "SMS", "contactId": "contact_1"})
+
+        url, _ = mock_post.call_args
+        self.assertEqual(
+            url[0],
+            f"{AUTH['baseurl']}/conversations/messages/inbound",
+        )
+
+    @patch("gohl.classes.conversations_messages.requests.post")
+    def test_forwards_message_payload_unchanged(self, mock_post):
+        mock_post.return_value = _mock_response({"messageId": "m1"})
+        message = {"type": "SMS", "contactId": "contact_1"}
+
+        ConversationsMessages(AUTH).add_inbound(message)
+
+        _, kwargs = mock_post.call_args
+        self.assertIs(kwargs["json"], message)
+
+    @patch("gohl.classes.conversations_messages.requests.post")
+    def test_returns_full_body_without_message_key(self, mock_post):
+        body = {"conversationId": "conv_1", "messageId": "m1"}
+        mock_post.return_value = _mock_response(body)
+
+        result = ConversationsMessages(AUTH).add_inbound(
+            {"type": "SMS", "conversationId": "conv_1"}
+        )
+
+        self.assertEqual(result, body)
+
+    @patch("gohl.classes.conversations_messages.requests.post")
+    def test_propagates_http_error(self, mock_post):
+        mock_post.return_value = _http_error_response(400)
+
+        with self.assertRaises(requests.exceptions.HTTPError):
+            ConversationsMessages(AUTH).add_inbound(
+                {"type": "SMS", "conversationId": "conv_1"}
+            )
+
+
 if __name__ == "__main__":
     unittest.main()

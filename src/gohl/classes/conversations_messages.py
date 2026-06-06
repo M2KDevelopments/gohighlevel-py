@@ -190,13 +190,15 @@ class ConversationsMessages:
         Raises:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing, neither
-                ``conversation_id`` nor ``contact_id`` is provided, or ``type``
-                is invalid
+                ``conversation_id`` nor ``contact_id`` is provided, neither
+                ``message`` nor ``html`` is set, or ``type`` is invalid
         """
         if not self.auth_data:
             raise ValueError("Authentication data is required")
         if not conversation_id and not contact_id:
             raise ValueError("Either conversation_id or contact_id is required")
+        if not message.get("message") and not message.get("html"):
+            raise ValueError("Either 'message' or 'html' is required")
 
         _validate_message_type(message)
 

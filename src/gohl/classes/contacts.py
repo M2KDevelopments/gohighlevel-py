@@ -142,6 +142,52 @@ class Contacts:
                 'contacts': data['contacts']
             }
 
+    def search_with_filters(self, query: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Search contacts using the advanced filter/sort payload.
+        Documentation: https://marketplace.gohighlevel.com/docs/ghl/contacts/search-contacts-advanced
+
+        Args:
+            query: Search payload (location_id, page_limit, filters, sort, etc.)
+
+        Returns:
+            The raw search response (total and contacts)
+        """
+        if not self.auth_data:
+            raise ValueError("Authentication data is required")
+
+        response = requests.post(
+            f"{self.auth_data.baseurl}/contacts/search/",
+            json=query,
+            headers=self.auth_data.headers
+        )
+        response.raise_for_status()
+        return response.json()
+
+    def lookup(self, email: str = '', phone: str = '') -> List[Dict[str, Any]]:
+        """
+        Look up contacts by email and/or phone. API key (v1) mode only.
+        Documentation: https://marketplace.gohighlevel.com/docs/ghl/contacts/contacts
+
+        Args:
+            email: Email address to look up
+            phone: Phone number to look up
+
+        Returns:
+            List of matching contacts
+        """
+        if not self.auth_data:
+            raise ValueError("Authentication data is required")
+        if not self.auth_data.use_api_key:
+            raise ValueError("Contact lookup is only available in API key mode")
+
+        response = requests.get(
+            f"{self.auth_data.baseurl}/contacts/lookup?email={email}&phone={phone}",
+            headers=self.auth_data.headers
+        )
+        response.raise_for_status()
+        return response.json()['contacts']
+
     def get_by_business_id(self, business_id: str) -> Dict[str, Any]:
         """
         Get Contacts By BusinessId

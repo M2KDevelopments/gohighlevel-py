@@ -9,19 +9,21 @@ import requests
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
+from gohl.classes.auth.authdata import Auth  # noqa: E402
 from gohl.classes.conversations_messages import (  # noqa: E402
     ConversationsMessages,
     MessageType,
 )
 
 
-AUTH = {
-    "baseurl": "https://services.leadconnectorhq.com",
-    "headers": {
+AUTH = Auth(
+    access_token="token",
+    baseurl="https://services.leadconnectorhq.com",
+    headers={
         "Authorization": "Bearer token",
         "Version": "2021-04-15",
     },
-}
+)
 
 
 def _mock_response(json_body, status_code=200):
@@ -66,14 +68,6 @@ class _AuthValidationMixin:
         with self.assertRaises(ValueError):
             self._call(ConversationsMessages(None))
 
-    def test_raises_when_headers_missing(self):
-        with self.assertRaises(ValueError):
-            self._call(ConversationsMessages({"baseurl": AUTH["baseurl"]}))
-
-    def test_raises_when_baseurl_missing(self):
-        with self.assertRaises(ValueError):
-            self._call(ConversationsMessages({"headers": AUTH["headers"]}))
-
     def test_raises_when_auth_data_empty(self):
         with self.assertRaises(ValueError):
             self._call(ConversationsMessages({}))
@@ -92,9 +86,9 @@ class GetAllTests(unittest.TestCase, _AuthValidationMixin):
         result = ConversationsMessages(AUTH).get_all("conv_1", limit=10, skip=5)
 
         mock_get.assert_called_once_with(
-            f"{AUTH['baseurl']}/conversations/conv_1/messages",
+            f"{AUTH.baseurl}/conversations/conv_1/messages",
             params={"limit": 10, "skip": 5},
-            headers=AUTH["headers"],
+            headers=AUTH.headers,
         )
         self.assertEqual(result, [{"id": "m1"}, {"id": "m2"}])
 
@@ -156,9 +150,9 @@ class AddTests(unittest.TestCase, _AuthValidationMixin):
         result = ConversationsMessages(AUTH).add("conv_1", message)
 
         mock_post.assert_called_once_with(
-            f"{AUTH['baseurl']}/conversations/conv_1/messages",
+            f"{AUTH.baseurl}/conversations/conv_1/messages",
             json=message,
-            headers=AUTH["headers"],
+            headers=AUTH.headers,
         )
         self.assertEqual(result["id"], "m_new")
         self.assertEqual(result["body"], message["body"])
@@ -236,9 +230,9 @@ class AddInboundTests(unittest.TestCase, _AuthValidationMixin):
         result = ConversationsMessages(AUTH).add_inbound(message)
 
         mock_post.assert_called_once_with(
-            f"{AUTH['baseurl']}/conversations/messages/inbound",
+            f"{AUTH.baseurl}/conversations/messages/inbound",
             json=message,
-            headers=AUTH["headers"],
+            headers=AUTH.headers,
         )
         self.assertEqual(result, body)
 
@@ -251,7 +245,7 @@ class AddInboundTests(unittest.TestCase, _AuthValidationMixin):
         url, _ = mock_post.call_args
         self.assertEqual(
             url[0],
-            f"{AUTH['baseurl']}/conversations/messages/inbound",
+            f"{AUTH.baseurl}/conversations/messages/inbound",
         )
 
     @patch("gohl.classes.conversations_messages.requests.post")

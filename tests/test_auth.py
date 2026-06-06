@@ -60,7 +60,7 @@ class AuthTests(unittest.TestCase):
         self.assertEqual(
             auth.headers,
             {
-                "Version": "2021-04-15",
+                "Version": "2021-07-28",
                 "Authorization": "Bearer my_token",
                 "Accept": "application/json",
             },
@@ -70,7 +70,7 @@ class AuthTests(unittest.TestCase):
         auth = Auth(access_token="tok", headers=None)
 
         self.assertEqual(auth.headers["Authorization"], "Bearer tok")
-        self.assertEqual(auth.headers["Version"], "2021-04-15")
+        self.assertEqual(auth.headers["Version"], "2021-07-28")
         self.assertEqual(auth.headers["Accept"], "application/json")
 
     def test_empty_dict_headers_falls_back_to_default(self):

@@ -52,12 +52,11 @@ class MessageData(TypedDict, total=False):
 class InboundMessageData(TypedDict, total=False):
     """Type definition for an inbound message.
 
-    Either ``conversationId`` or ``contactId`` is required, along with
-    ``type`` and ``conversationProviderId``.
+    ``type`` and ``conversationProviderId`` are required. The target is supplied
+    separately via the ``conversation_id`` / ``contact_id`` arguments of
+    :meth:`ConversationsMessages.add_inbound`.
     """
     type: Union[MessageType, str]
-    conversationId: str
-    contactId: str
     conversationProviderId: str
     message: str
     attachments: List[str]
@@ -156,26 +155,33 @@ class ConversationsMessages:
         response.raise_for_status()
         return response.json()['message']
 
-    def add_inbound(self, message: InboundMessageData) -> Dict:
+    def add_inbound(
+        self,
+        message: InboundMessageData,
+        conversation_id: str = '',
+        contact_id: str = ''
+    ) -> Dict:
         """Add an inbound message to a conversation.
 
         See https://marketplace.gohighlevel.com/docs/ghl/conversations/add-an-inbound-message
 
-        Unlike :meth:`add`, the target is identified inside the payload
-        (``conversationId`` or ``contactId``) rather than in the URL.
+        Unlike :meth:`add`, the inbound endpoint identifies the target in the
+        payload. Provide at least one of ``conversation_id`` or ``contact_id``;
+        they are merged into the request body as ``conversationId`` /
+        ``contactId``.
 
         Args:
             message (InboundMessageData): Inbound message payload. Requires
-                ``type`` and ``conversationProviderId``, plus either
-                ``conversationId`` or ``contactId``.
+                ``type`` and ``conversationProviderId``.
                 Example:
                 {
                     "type": "SMS",
-                    "conversationId": "conv_1",
                     "conversationProviderId": "provider_1",
                     "message": "Hello! How can I help you today?",
                     "attachments": ["https://example.com/file.pdf"]
                 }
+            conversation_id (str, optional): The ID of the target conversation.
+            contact_id (str, optional): The ID of the target contact.
 
         Returns:
             Dict: Response describing the created message (``conversationId``,
@@ -183,16 +189,26 @@ class ConversationsMessages:
 
         Raises:
             requests.exceptions.RequestException: If the API request fails
-            ValueError: If authentication data is missing or ``type`` is invalid
+            ValueError: If authentication data is missing, neither
+                ``conversation_id`` nor ``contact_id`` is provided, or ``type``
+                is invalid
         """
         if not self.auth_data:
             raise ValueError("Authentication data is required")
+        if not conversation_id and not contact_id:
+            raise ValueError("Either conversation_id or contact_id is required")
 
         _validate_message_type(message)
 
+        payload = {**message}
+        if conversation_id:
+            payload['conversationId'] = conversation_id
+        if contact_id:
+            payload['contactId'] = contact_id
+
         response = requests.post(
             f"{self.auth_data.baseurl}/conversations/messages/inbound",
-            json=message,
+            json=payload,
             headers=self.auth_data.headers
         )
         response.raise_for_status()

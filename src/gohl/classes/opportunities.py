@@ -6,6 +6,7 @@ in GoHighLevel, including pipeline management and deal tracking.
 
 from typing import Dict, List, Optional, TypedDict
 import requests
+from .auth.authdata import Auth
 
 from .opportunities_pipelines import Pipelines
 from .opportunities_notes import Notes
@@ -36,7 +37,7 @@ class Opportunities:
     pipeline management, deal tracking, and opportunity analytics.
     """
 
-    def __init__(self, auth_data: Optional[Dict] = None) -> None:
+    def __init__(self, auth_data: Optional[Auth] = None):
         """Initialize the Opportunities class.
 
         Args:
@@ -72,7 +73,7 @@ class Opportunities:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         params = {
@@ -88,9 +89,9 @@ class Opportunities:
             params['status'] = status
 
         response = requests.get(
-            f"{self.auth_data['baseurl']}/opportunities",
+            f"{self.auth_data.baseurl}/opportunities",
             params=params,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['opportunities']
@@ -108,12 +109,12 @@ class Opportunities:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.get(
-            f"{self.auth_data['baseurl']}/opportunities/{opportunity_id}",
-            headers=self.auth_data['headers']
+            f"{self.auth_data.baseurl}/opportunities/{opportunity_id}",
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['opportunity']
@@ -151,7 +152,7 @@ class Opportunities:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         opportunity_data = {
@@ -160,9 +161,9 @@ class Opportunities:
         }
 
         response = requests.post(
-            f"{self.auth_data['baseurl']}/opportunities",
+            f"{self.auth_data.baseurl}/opportunities",
             json=opportunity_data,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['opportunity']
@@ -188,13 +189,13 @@ class Opportunities:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.put(
-            f"{self.auth_data['baseurl']}/opportunities/{opportunity_id}",
+            f"{self.auth_data.baseurl}/opportunities/{opportunity_id}",
             json=data,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['opportunity']
@@ -212,12 +213,12 @@ class Opportunities:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.delete(
-            f"{self.auth_data['baseurl']}/opportunities/{opportunity_id}",
-            headers=self.auth_data['headers']
+            f"{self.auth_data.baseurl}/opportunities/{opportunity_id}",
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()
@@ -244,7 +245,7 @@ class Opportunities:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         params = {'locationId': location_id}
@@ -256,9 +257,9 @@ class Opportunities:
             params['endDate'] = end_date
 
         response = requests.get(
-            f"{self.auth_data['baseurl']}/opportunities/analytics",
+            f"{self.auth_data.baseurl}/opportunities/analytics",
             params=params,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['analytics'] 

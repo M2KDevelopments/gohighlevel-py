@@ -6,6 +6,7 @@ in GoHighLevel, including stages and pipeline configuration.
 
 from typing import Dict, List, Optional, TypedDict
 import requests
+from .auth.authdata import Auth
 
 
 class PipelineConfig(TypedDict, total=False):
@@ -24,7 +25,7 @@ class Pipelines:
     including stages and pipeline configuration.
     """
 
-    def __init__(self, auth_data: Optional[Dict] = None) -> None:
+    def __init__(self, auth_data: Optional[Auth] = None):
         """Initialize the Pipelines class.
 
         Args:
@@ -45,15 +46,15 @@ class Pipelines:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         params = {'locationId': location_id}
 
         response = requests.get(
-            f"{self.auth_data['baseurl']}/opportunities/pipelines",
+            f"{self.auth_data.baseurl}/opportunities/pipelines",
             params=params,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['pipelines']
@@ -71,12 +72,12 @@ class Pipelines:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.get(
-            f"{self.auth_data['baseurl']}/opportunities/pipelines/{pipeline_id}",
-            headers=self.auth_data['headers']
+            f"{self.auth_data.baseurl}/opportunities/pipelines/{pipeline_id}",
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['pipeline']
@@ -122,7 +123,7 @@ class Pipelines:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         pipeline_data = {
@@ -131,9 +132,9 @@ class Pipelines:
         }
 
         response = requests.post(
-            f"{self.auth_data['baseurl']}/opportunities/pipelines",
+            f"{self.auth_data.baseurl}/opportunities/pipelines",
             json=pipeline_data,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['pipeline']
@@ -166,13 +167,13 @@ class Pipelines:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.put(
-            f"{self.auth_data['baseurl']}/opportunities/pipelines/{pipeline_id}",
+            f"{self.auth_data.baseurl}/opportunities/pipelines/{pipeline_id}",
             json=data,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['pipeline']
@@ -190,12 +191,12 @@ class Pipelines:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.delete(
-            f"{self.auth_data['baseurl']}/opportunities/pipelines/{pipeline_id}",
-            headers=self.auth_data['headers']
+            f"{self.auth_data.baseurl}/opportunities/pipelines/{pipeline_id}",
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()
@@ -213,12 +214,12 @@ class Pipelines:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.get(
-            f"{self.auth_data['baseurl']}/opportunities/pipelines/{pipeline_id}/stages",
-            headers=self.auth_data['headers']
+            f"{self.auth_data.baseurl}/opportunities/pipelines/{pipeline_id}/stages",
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['stages']
@@ -247,13 +248,13 @@ class Pipelines:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.put(
-            f"{self.auth_data['baseurl']}/opportunities/pipelines/{pipeline_id}/stages/order",
+            f"{self.auth_data.baseurl}/opportunities/pipelines/{pipeline_id}/stages/order",
             json={'stages': stage_order},
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['stages'] 

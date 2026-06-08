@@ -5,6 +5,7 @@ in GoHighLevel, including listing and managing workflows.
 """
 
 from typing import Dict, List, Optional
+
 import requests
 
 from .auth.authdata import Auth
@@ -13,7 +14,7 @@ from .auth.authdata import Auth
 class Workflow:
     """
     Endpoints For Workflows
-    https://highlevel.stoplight.io/docs/integrations/3c7cf6a44f362-workflows-api
+    https://marketplace.gohighlevel.com/docs/ghl/workflows/workflows
     """
     
     def __init__(self, auth_data: Optional[Auth] = None):
@@ -27,7 +28,7 @@ class Workflow:
     def get_all(self, location_id: str) -> List[Dict]:
         """Get all workflows for a location.
         
-        Documentation: https://highlevel.stoplight.io/docs/integrations/070d2f9be5549-get-workflow
+        Documentation: https://marketplace.gohighlevel.com/docs/ghl/workflows/get-workflow
         
         Args:
             location_id (str): The ID of the location to get workflows for
@@ -43,7 +44,7 @@ class Workflow:
             raise ValueError("Authentication data is required")
             
         response = requests.get(
-            f"{self.auth_data.baseurl}/workflows",
+            f"{self.auth_data.baseurl}/workflows/",
             params={'locationId': location_id},
             headers=self.auth_data.headers
         )

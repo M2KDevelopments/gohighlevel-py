@@ -6,6 +6,7 @@ in GoHighLevel, including funnel pages, settings, and analytics.
 
 from typing import Dict, List, Optional, TypedDict
 import requests
+from .auth.authdata import Auth
 
 from .funnels_redirect import FunnelsRedirect
 
@@ -40,7 +41,7 @@ class Funnels:
     updating, and retrieving funnels and their pages.
     """
 
-    def __init__(self, auth_data: Optional[Dict] = None) -> None:
+    def __init__(self, auth_data: Optional[Auth] = None):
         """Initialize the Funnels class.
 
         Args:
@@ -69,7 +70,7 @@ class Funnels:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         params = {
@@ -79,9 +80,9 @@ class Funnels:
         }
 
         response = requests.get(
-            f"{self.auth_data['baseurl']}/funnels",
+            f"{self.auth_data.baseurl}/funnels",
             params=params,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['funnels']
@@ -99,12 +100,12 @@ class Funnels:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.get(
-            f"{self.auth_data['baseurl']}/funnels/{funnel_id}",
-            headers=self.auth_data['headers']
+            f"{self.auth_data.baseurl}/funnels/{funnel_id}",
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['funnel']
@@ -141,7 +142,7 @@ class Funnels:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         data = {
@@ -152,9 +153,9 @@ class Funnels:
             data['pages'] = pages
 
         response = requests.post(
-            f"{self.auth_data['baseurl']}/funnels",
+            f"{self.auth_data.baseurl}/funnels",
             json=data,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['funnel']
@@ -180,13 +181,13 @@ class Funnels:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.put(
-            f"{self.auth_data['baseurl']}/funnels/{funnel_id}",
+            f"{self.auth_data.baseurl}/funnels/{funnel_id}",
             json=data,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['funnel']
@@ -204,12 +205,12 @@ class Funnels:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.delete(
-            f"{self.auth_data['baseurl']}/funnels/{funnel_id}",
-            headers=self.auth_data['headers']
+            f"{self.auth_data.baseurl}/funnels/{funnel_id}",
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()
@@ -227,12 +228,12 @@ class Funnels:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.get(
-            f"{self.auth_data['baseurl']}/funnels/{funnel_id}/pages",
-            headers=self.auth_data['headers']
+            f"{self.auth_data.baseurl}/funnels/{funnel_id}/pages",
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['pages']
@@ -262,13 +263,13 @@ class Funnels:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.post(
-            f"{self.auth_data['baseurl']}/funnels/{funnel_id}/pages",
+            f"{self.auth_data.baseurl}/funnels/{funnel_id}/pages",
             json=page,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['page']
@@ -294,13 +295,13 @@ class Funnels:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.put(
-            f"{self.auth_data['baseurl']}/funnels/{funnel_id}/pages/{page_id}",
+            f"{self.auth_data.baseurl}/funnels/{funnel_id}/pages/{page_id}",
             json=data,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['page']
@@ -319,12 +320,12 @@ class Funnels:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.delete(
-            f"{self.auth_data['baseurl']}/funnels/{funnel_id}/pages/{page_id}",
-            headers=self.auth_data['headers']
+            f"{self.auth_data.baseurl}/funnels/{funnel_id}/pages/{page_id}",
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()
@@ -349,7 +350,7 @@ class Funnels:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         params = {
@@ -358,9 +359,9 @@ class Funnels:
         }
 
         response = requests.get(
-            f"{self.auth_data['baseurl']}/funnels/{funnel_id}/analytics",
+            f"{self.auth_data.baseurl}/funnels/{funnel_id}/analytics",
             params=params,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['analytics'] 

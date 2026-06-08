@@ -58,7 +58,7 @@ class Note:
     def add(self, contact_id: str, note: Dict[str, Any]) -> Dict[str, Any]:
         """
         Create Note
-        Documentation - https://highlevel.stoplight.io/docs/integrations/5eab1684a9948-create-note
+        Documentation - https://marketplace.gohighlevel.com/docs/ghl/contacts/create-note
         
         Args:
             contact_id: The contact ID

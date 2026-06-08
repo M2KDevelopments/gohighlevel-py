@@ -6,6 +6,7 @@ in GoHighLevel.
 
 from typing import Dict, List, Optional, TypedDict
 import requests
+from .auth.authdata import Auth
 
 
 class FormField(TypedDict, total=False):
@@ -38,7 +39,7 @@ class Form:
     updating, and retrieving forms and their submissions.
     """
 
-    def __init__(self, auth_data: Optional[Dict] = None) -> None:
+    def __init__(self, auth_data: Optional[Auth] = None):
         """Initialize the Forms class.
 
         Args:
@@ -66,7 +67,7 @@ class Form:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         params = {
@@ -76,9 +77,9 @@ class Form:
         }
 
         response = requests.get(
-            f"{self.auth_data['baseurl']}/forms",
+            f"{self.auth_data.baseurl}/forms",
             params=params,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['forms']
@@ -96,12 +97,12 @@ class Form:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.get(
-            f"{self.auth_data['baseurl']}/forms/{form_id}",
-            headers=self.auth_data['headers']
+            f"{self.auth_data.baseurl}/forms/{form_id}",
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['form']
@@ -144,7 +145,7 @@ class Form:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         data = {
@@ -154,9 +155,9 @@ class Form:
         }
 
         response = requests.post(
-            f"{self.auth_data['baseurl']}/forms",
+            f"{self.auth_data.baseurl}/forms",
             json=data,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['form']
@@ -183,13 +184,13 @@ class Form:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.put(
-            f"{self.auth_data['baseurl']}/forms/{form_id}",
+            f"{self.auth_data.baseurl}/forms/{form_id}",
             json=data,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['form']
@@ -207,12 +208,12 @@ class Form:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.delete(
-            f"{self.auth_data['baseurl']}/forms/{form_id}",
-            headers=self.auth_data['headers']
+            f"{self.auth_data.baseurl}/forms/{form_id}",
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()
@@ -237,7 +238,7 @@ class Form:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         params = {
@@ -246,9 +247,9 @@ class Form:
         }
 
         response = requests.get(
-            f"{self.auth_data['baseurl']}/forms/{form_id}/submissions",
+            f"{self.auth_data.baseurl}/forms/{form_id}/submissions",
             params=params,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['submissions']
@@ -267,12 +268,12 @@ class Form:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.get(
-            f"{self.auth_data['baseurl']}/forms/{form_id}/submissions/{submission_id}",
-            headers=self.auth_data['headers']
+            f"{self.auth_data.baseurl}/forms/{form_id}/submissions/{submission_id}",
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['submission'] 

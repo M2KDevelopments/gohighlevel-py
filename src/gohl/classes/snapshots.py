@@ -6,6 +6,7 @@ in GoHighLevel, including backup and restore functionality.
 
 from typing import Dict, List, Optional, TypedDict
 import requests
+from .auth.authdata import Auth
 
 
 class SnapshotConfig(TypedDict, total=False):
@@ -25,7 +26,7 @@ class Snapshots:
     creating backups and restoring data.
     """
 
-    def __init__(self, auth_data: Optional[Dict] = None) -> None:
+    def __init__(self, auth_data: Optional[Auth] = None):
         """Initialize the Snapshots class.
 
         Args:
@@ -53,7 +54,7 @@ class Snapshots:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         params = {
@@ -63,9 +64,9 @@ class Snapshots:
         }
 
         response = requests.get(
-            f"{self.auth_data['baseurl']}/snapshots",
+            f"{self.auth_data.baseurl}/snapshots",
             params=params,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['snapshots']
@@ -83,12 +84,12 @@ class Snapshots:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.get(
-            f"{self.auth_data['baseurl']}/snapshots/{snapshot_id}",
-            headers=self.auth_data['headers']
+            f"{self.auth_data.baseurl}/snapshots/{snapshot_id}",
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['snapshot']
@@ -120,7 +121,7 @@ class Snapshots:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         data = {
@@ -129,9 +130,9 @@ class Snapshots:
         }
 
         response = requests.post(
-            f"{self.auth_data['baseurl']}/snapshots",
+            f"{self.auth_data.baseurl}/snapshots",
             json=data,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['snapshot']
@@ -149,12 +150,12 @@ class Snapshots:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.delete(
-            f"{self.auth_data['baseurl']}/snapshots/{snapshot_id}",
-            headers=self.auth_data['headers']
+            f"{self.auth_data.baseurl}/snapshots/{snapshot_id}",
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()
@@ -180,7 +181,7 @@ class Snapshots:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         data = {
@@ -190,9 +191,9 @@ class Snapshots:
             data['dataTypes'] = data_types
 
         response = requests.post(
-            f"{self.auth_data['baseurl']}/snapshots/{snapshot_id}/restore",
+            f"{self.auth_data.baseurl}/snapshots/{snapshot_id}/restore",
             json=data,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['restore']
@@ -210,12 +211,12 @@ class Snapshots:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.get(
-            f"{self.auth_data['baseurl']}/snapshots/restore/{restore_id}",
-            headers=self.auth_data['headers']
+            f"{self.auth_data.baseurl}/snapshots/restore/{restore_id}",
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['status']
@@ -246,7 +247,7 @@ class Snapshots:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         data = {
@@ -256,9 +257,9 @@ class Snapshots:
         }
 
         response = requests.post(
-            f"{self.auth_data['baseurl']}/snapshots/schedule",
+            f"{self.auth_data.baseurl}/snapshots/schedule",
             json=data,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['schedule']
@@ -286,13 +287,13 @@ class Snapshots:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.put(
-            f"{self.auth_data['baseurl']}/snapshots/schedule/{schedule_id}",
+            f"{self.auth_data.baseurl}/snapshots/schedule/{schedule_id}",
             json=schedule,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['schedule'] 

@@ -4,24 +4,37 @@ This module provides the Conversations class for managing conversations in GoHig
 including operations like getting, updating, and searching conversations.
 """
 
-from typing import Dict, List, Optional, TypedDict, Union
+from typing import Any, Dict, List, Optional, TypedDict
 import requests
 
+from .auth.authdata import Auth
 from .conversations_email import ConversationsEmail
 from .conversations_messages import ConversationsMessages
 from .conversations_providers import ConversationsProviders
 
 
-class DateRange(TypedDict):
-    """Type definition for date range filter."""
-    startDate: str
-    endDate: str
+class ConversationSearchFilter(TypedDict, total=False):
+    """Optional query parameters for searching conversations.
 
-
-class ConversationFilters(TypedDict, total=False):
-    """Type definition for conversation search filters."""
+    Mirrors the documented filter/sort options of
+    https://marketplace.gohighlevel.com/docs/ghl/conversations/search-conversation
+    """
+    assignedTo: str
+    contactId: str
+    followers: str
+    id: str
+    lastMessageAction: str
+    lastMessageDirection: str
+    lastMessageType: str
+    mentions: str
+    scoreProfile: str
+    scoreProfileMin: float
+    scoreProfileMax: float
+    sort: str
+    sortBy: str
+    sortScoreProfile: str
+    startAfterDate: int
     status: str
-    dateRange: DateRange
 
 
 class Conversations:
@@ -31,7 +44,7 @@ class Conversations:
     for retrieving, updating, and searching conversations.
     """
 
-    def __init__(self, auth_data: Optional[Dict] = None) -> None:
+    def __init__(self, auth_data: Optional[Auth] = None):
         """Initialize the Conversations class.
 
         Args:
@@ -61,7 +74,7 @@ class Conversations:
         Raises:
             requests.exceptions.RequestException: If the API request fails
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         params = {
@@ -71,9 +84,9 @@ class Conversations:
         }
 
         response = requests.get(
-            f"{self.auth_data['baseurl']}/conversations",
+            f"{self.auth_data.baseurl}/conversations",
             params=params,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['conversations']
@@ -90,12 +103,43 @@ class Conversations:
         Raises:
             requests.exceptions.RequestException: If the API request fails
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.get(
-            f"{self.auth_data['baseurl']}/conversations/{conversation_id}",
-            headers=self.auth_data['headers']
+            f"{self.auth_data.baseurl}/conversations/{conversation_id}",
+            headers=self.auth_data.headers
+        )
+        response.raise_for_status()
+        return response.json()['conversation']
+
+    def create(self, location_id: str, contact_id: str) -> Dict:
+        """Create a new conversation.
+
+        https://marketplace.gohighlevel.com/docs/ghl/conversations/create-conversation
+
+        Args:
+            location_id (str): The ID of the location
+            contact_id (str): The ID of the contact to associate with the conversation
+
+        Returns:
+            Dict: The created conversation object
+
+        Raises:
+            requests.exceptions.RequestException: If the API request fails
+        """
+        if not self.auth_data:
+            raise ValueError("Authentication data is required")
+
+        data = {
+            'locationId': location_id,
+            'contactId': contact_id
+        }
+
+        response = requests.post(
+            f"{self.auth_data.baseurl}/conversations/",
+            json=data,
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['conversation']
@@ -113,13 +157,13 @@ class Conversations:
         Raises:
             requests.exceptions.RequestException: If the API request fails
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.put(
-            f"{self.auth_data['baseurl']}/conversations/{conversation_id}",
+            f"{self.auth_data.baseurl}/conversations/{conversation_id}",
             json=data,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['conversation']
@@ -127,16 +171,20 @@ class Conversations:
     def search(
         self,
         location_id: str,
-        query: str,
-        filters: Optional[ConversationFilters] = None
+        query: str = '',
+        limit: int = 20,
+        filters: Optional[ConversationSearchFilter] = None
     ) -> List[Dict]:
         """Search conversations.
 
+        https://marketplace.gohighlevel.com/docs/ghl/conversations/search-conversation
+
         Args:
             location_id (str): The ID of the location
-            query (str): Search query string
-            filters (Optional[ConversationFilters], optional): Search filters.
-                Defaults to None.
+            query (str, optional): Search query string. Defaults to ''.
+            limit (int, optional): Number of conversations to return. Defaults to 20.
+            filters (Optional[ConversationSearchFilter], optional): Additional
+                filter/sort query parameters. Defaults to None.
 
         Returns:
             List[Dict]: List of matching conversations
@@ -144,20 +192,22 @@ class Conversations:
         Raises:
             requests.exceptions.RequestException: If the API request fails
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
-        data = {
+        params: Dict[str, Any] = {
             'locationId': location_id,
-            'query': query
+            'limit': limit
         }
+        if query:
+            params['query'] = query
         if filters:
-            data['filters'] = filters
+            params.update(filters)
 
-        response = requests.post(
-            f"{self.auth_data['baseurl']}/conversations/search",
-            json=data,
-            headers=self.auth_data['headers']
+        response = requests.get(
+            f"{self.auth_data.baseurl}/conversations/search",
+            params=params,
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
-        return response.json()['conversations'] 
+        return response.json()['conversations']

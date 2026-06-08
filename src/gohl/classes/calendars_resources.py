@@ -6,6 +6,7 @@ such as equipment and rooms.
 """
 
 import requests
+from .auth.authdata import Auth
 from typing import Dict, List, Optional, Literal, Union
 
 
@@ -19,7 +20,7 @@ class CalendarResource:
     for equipment and room resources.
     """
 
-    def __init__(self, auth_data: Optional[Dict] = None) -> None:
+    def __init__(self, auth_data: Optional[Auth] = None):
         """Initialize the CalendarResource class.
 
         Args:
@@ -39,12 +40,12 @@ class CalendarResource:
         Raises:
             requests.exceptions.RequestException: If the API request fails
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.get(
-            f"{self.auth_data['baseurl']}/calendars/resources/{resource_type}",
-            headers=self.auth_data['headers']
+            f"{self.auth_data.baseurl}/calendars/resources/{resource_type}",
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()
@@ -62,12 +63,12 @@ class CalendarResource:
         Raises:
             requests.exceptions.RequestException: If the API request fails
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.get(
-            f"{self.auth_data['baseurl']}/calendars/resources/{resource_type}/{resource_id}",
-            headers=self.auth_data['headers']
+            f"{self.auth_data.baseurl}/calendars/resources/{resource_type}/{resource_id}",
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()
@@ -85,13 +86,13 @@ class CalendarResource:
         Raises:
             requests.exceptions.RequestException: If the API request fails
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.post(
-            f"{self.auth_data['baseurl']}/calendars/resources/{resource_type}",
+            f"{self.auth_data.baseurl}/calendars/resources/{resource_type}",
             json=resource,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['note']
@@ -110,13 +111,13 @@ class CalendarResource:
         Raises:
             requests.exceptions.RequestException: If the API request fails
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.put(
-            f"{self.auth_data['baseurl']}/calendars/resources/{resource_type}/{resource_id}",
+            f"{self.auth_data.baseurl}/calendars/resources/{resource_type}/{resource_id}",
             json=resource,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['note']
@@ -134,12 +135,12 @@ class CalendarResource:
         Raises:
             requests.exceptions.RequestException: If the API request fails
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.delete(
-            f"{self.auth_data['baseurl']}/calendars/resources/{resource_type}/{resource_id}",
-            headers=self.auth_data['headers']
+            f"{self.auth_data.baseurl}/calendars/resources/{resource_type}/{resource_id}",
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['succeeded'] 

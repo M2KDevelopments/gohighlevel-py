@@ -6,6 +6,7 @@ in GoHighLevel, including subscriptions, billing, and user management.
 
 from typing import Dict, List, Optional, TypedDict
 import requests
+from .auth.authdata import Auth
 
 
 class Subscription(TypedDict, total=False):
@@ -27,7 +28,7 @@ class SaaS:
     including subscriptions, billing, and user management.
     """
 
-    def __init__(self, auth_data: Optional[Dict] = None) -> None:
+    def __init__(self, auth_data: Optional[Auth] = None):
         """Initialize the SaaS class.
 
         Args:
@@ -55,7 +56,7 @@ class SaaS:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         params = {
@@ -65,9 +66,9 @@ class SaaS:
         }
 
         response = requests.get(
-            f"{self.auth_data['baseurl']}/saas/subscriptions",
+            f"{self.auth_data.baseurl}/saas/subscriptions",
             params=params,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['subscriptions']
@@ -85,12 +86,12 @@ class SaaS:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.get(
-            f"{self.auth_data['baseurl']}/saas/subscriptions/{subscription_id}",
-            headers=self.auth_data['headers']
+            f"{self.auth_data.baseurl}/saas/subscriptions/{subscription_id}",
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['subscription']
@@ -126,7 +127,7 @@ class SaaS:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         data = {
@@ -135,9 +136,9 @@ class SaaS:
         }
 
         response = requests.post(
-            f"{self.auth_data['baseurl']}/saas/subscriptions",
+            f"{self.auth_data.baseurl}/saas/subscriptions",
             json=data,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['subscription']
@@ -162,13 +163,13 @@ class SaaS:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.put(
-            f"{self.auth_data['baseurl']}/saas/subscriptions/{subscription_id}",
+            f"{self.auth_data.baseurl}/saas/subscriptions/{subscription_id}",
             json=data,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['subscription']
@@ -191,7 +192,7 @@ class SaaS:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         data = {}
@@ -199,9 +200,9 @@ class SaaS:
             data['reason'] = reason
 
         response = requests.post(
-            f"{self.auth_data['baseurl']}/saas/subscriptions/{subscription_id}/cancel",
+            f"{self.auth_data.baseurl}/saas/subscriptions/{subscription_id}/cancel",
             json=data,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()
@@ -226,7 +227,7 @@ class SaaS:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         params = {}
@@ -236,9 +237,9 @@ class SaaS:
             params['endDate'] = end_date
 
         response = requests.get(
-            f"{self.auth_data['baseurl']}/saas/subscriptions/{subscription_id}/billing",
+            f"{self.auth_data.baseurl}/saas/subscriptions/{subscription_id}/billing",
             params=params,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['transactions']
@@ -265,7 +266,7 @@ class SaaS:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         params = {'metric': metric}
@@ -275,9 +276,9 @@ class SaaS:
             params['endDate'] = end_date
 
         response = requests.get(
-            f"{self.auth_data['baseurl']}/saas/subscriptions/{subscription_id}/usage",
+            f"{self.auth_data.baseurl}/saas/subscriptions/{subscription_id}/usage",
             params=params,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['usage'] 

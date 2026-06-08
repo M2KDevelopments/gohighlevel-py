@@ -8,6 +8,7 @@ managing calendar events, appointments, and block slots.
 from typing import Dict, List, Optional, Union
 import requests
 
+from .auth.authdata import Auth
 from .calendars_appointmentsnotes import CalendarAppointmentNote
 from .calendars_events import CalendarEvent
 from .calendars_groups import CalendarGroup
@@ -29,7 +30,7 @@ class Calendar:
         resources (CalendarResource): Handler for calendar resources
     """
 
-    def __init__(self, auth_data: Optional[Dict] = None) -> None:
+    def __init__(self, auth_data: Optional[Auth] = None):
         """Initialize the Calendar class.
 
         Args:
@@ -55,16 +56,16 @@ class Calendar:
         Raises:
             requests.exceptions.RequestException: If the API request fails
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.get(
-            f"{self.auth_data['baseurl']}/calendars",
+            f"{self.auth_data.baseurl}/calendars",
             params={
                 'locationId': location_id,
                 'showDrafted': str(show_drafted).lower()
             },
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['calendars']
@@ -81,12 +82,12 @@ class Calendar:
         Raises:
             requests.exceptions.RequestException: If the API request fails
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.get(
-            f"{self.auth_data['baseurl']}/calendars/{calendar_id}",
-            headers=self.auth_data['headers']
+            f"{self.auth_data.baseurl}/calendars/{calendar_id}",
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['calendar']
@@ -114,7 +115,7 @@ class Calendar:
         Raises:
             requests.exceptions.RequestException: If the API request fails
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         params = {
@@ -127,9 +128,9 @@ class Calendar:
             params['userId'] = user_id
 
         response = requests.get(
-            f"{self.auth_data['baseurl']}/calendars/{calendar_id}/free-slots",
+            f"{self.auth_data.baseurl}/calendars/{calendar_id}/free-slots",
             params=params,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['calendar']
@@ -146,13 +147,13 @@ class Calendar:
         Raises:
             requests.exceptions.RequestException: If the API request fails
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.post(
-            f"{self.auth_data['baseurl']}/calendars",
+            f"{self.auth_data.baseurl}/calendars",
             json=calendar,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['calendar']
@@ -179,7 +180,7 @@ class Calendar:
         Raises:
             requests.exceptions.RequestException: If the API request fails
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         data = {
@@ -190,9 +191,9 @@ class Calendar:
         }
 
         response = requests.post(
-            f"{self.auth_data['baseurl']}/calendars/events/block-slots",
+            f"{self.auth_data.baseurl}/calendars/events/block-slots",
             json=data,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()
@@ -210,13 +211,13 @@ class Calendar:
         Raises:
             requests.exceptions.RequestException: If the API request fails
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.put(
-            f"{self.auth_data['baseurl']}/calendars/{calendar_id}",
+            f"{self.auth_data.baseurl}/calendars/{calendar_id}",
             json=calendar,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['calendar']
@@ -233,12 +234,12 @@ class Calendar:
         Raises:
             requests.exceptions.RequestException: If the API request fails
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.delete(
-            f"{self.auth_data['baseurl']}/calendars/{calendar_id}",
-            headers=self.auth_data['headers']
+            f"{self.auth_data.baseurl}/calendars/{calendar_id}",
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['succeeded'] 

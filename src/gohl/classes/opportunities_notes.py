@@ -6,6 +6,7 @@ in GoHighLevel, including creation and tracking of notes.
 
 from typing import Dict, List, Optional, TypedDict
 import requests
+from .auth.authdata import Auth
 
 
 class NoteData(TypedDict, total=False):
@@ -23,7 +24,7 @@ class Notes:
     including creation and retrieval of notes.
     """
 
-    def __init__(self, auth_data: Optional[Dict] = None) -> None:
+    def __init__(self, auth_data: Optional[Auth] = None):
         """Initialize the Notes class.
 
         Args:
@@ -51,7 +52,7 @@ class Notes:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         params = {
@@ -60,9 +61,9 @@ class Notes:
         }
 
         response = requests.get(
-            f"{self.auth_data['baseurl']}/opportunities/{opportunity_id}/notes",
+            f"{self.auth_data.baseurl}/opportunities/{opportunity_id}/notes",
             params=params,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['notes']
@@ -81,12 +82,12 @@ class Notes:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.get(
-            f"{self.auth_data['baseurl']}/opportunities/{opportunity_id}/notes/{note_id}",
-            headers=self.auth_data['headers']
+            f"{self.auth_data.baseurl}/opportunities/{opportunity_id}/notes/{note_id}",
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['note']
@@ -117,13 +118,13 @@ class Notes:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.post(
-            f"{self.auth_data['baseurl']}/opportunities/{opportunity_id}/notes",
+            f"{self.auth_data.baseurl}/opportunities/{opportunity_id}/notes",
             json=data,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['note']
@@ -148,13 +149,13 @@ class Notes:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.put(
-            f"{self.auth_data['baseurl']}/opportunities/{opportunity_id}/notes/{note_id}",
+            f"{self.auth_data.baseurl}/opportunities/{opportunity_id}/notes/{note_id}",
             json=data,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['note']
@@ -173,12 +174,12 @@ class Notes:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.delete(
-            f"{self.auth_data['baseurl']}/opportunities/{opportunity_id}/notes/{note_id}",
-            headers=self.auth_data['headers']
+            f"{self.auth_data.baseurl}/opportunities/{opportunity_id}/notes/{note_id}",
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json() 

@@ -214,12 +214,11 @@ updated_conversation = ghl.conversations.update(
 search_results = ghl.conversations.search(
     location_id="your_location_id",
     query="customer support",
+    limit=20,
     filters={
-        "status": "open",
-        "dateRange": {
-            "startDate": "2024-01-01T00:00:00Z",
-            "endDate": "2024-01-31T23:59:59Z"
-        }
+        "status": "unread",
+        "sortBy": "last_message_date",
+        "sort": "desc"
     }
 )
 ```

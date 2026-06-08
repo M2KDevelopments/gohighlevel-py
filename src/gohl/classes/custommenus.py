@@ -6,6 +6,7 @@ in GoHighLevel, including menu items, structure, and permissions.
 
 from typing import Dict, List, Optional, TypedDict
 import requests
+from .auth.authdata import Auth
 
 
 class MenuItem(TypedDict, total=False):
@@ -36,7 +37,7 @@ class CustomMenus:
     updating, and retrieving menu items and groups.
     """
 
-    def __init__(self, auth_data: Optional[Dict] = None) -> None:
+    def __init__(self, auth_data: Optional[Auth] = None):
         """Initialize the CustomMenus class.
 
         Args:
@@ -66,7 +67,7 @@ class CustomMenus:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         params = {
@@ -77,9 +78,9 @@ class CustomMenus:
         }
 
         response = requests.get(
-            f"{self.auth_data['baseurl']}/custom-menus",
+            f"{self.auth_data.baseurl}/custom-menus",
             params=params,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['menuGroups']
@@ -97,12 +98,12 @@ class CustomMenus:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.get(
-            f"{self.auth_data['baseurl']}/custom-menus/{group_id}",
-            headers=self.auth_data['headers']
+            f"{self.auth_data.baseurl}/custom-menus/{group_id}",
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['menuGroup']
@@ -143,7 +144,7 @@ class CustomMenus:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         data = {
@@ -152,9 +153,9 @@ class CustomMenus:
         }
 
         response = requests.post(
-            f"{self.auth_data['baseurl']}/custom-menus",
+            f"{self.auth_data.baseurl}/custom-menus",
             json=data,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['menuGroup']
@@ -179,13 +180,13 @@ class CustomMenus:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.put(
-            f"{self.auth_data['baseurl']}/custom-menus/{group_id}",
+            f"{self.auth_data.baseurl}/custom-menus/{group_id}",
             json=data,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['menuGroup']
@@ -203,12 +204,12 @@ class CustomMenus:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.delete(
-            f"{self.auth_data['baseurl']}/custom-menus/{group_id}",
-            headers=self.auth_data['headers']
+            f"{self.auth_data.baseurl}/custom-menus/{group_id}",
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()
@@ -237,13 +238,13 @@ class CustomMenus:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.post(
-            f"{self.auth_data['baseurl']}/custom-menus/{group_id}/items",
+            f"{self.auth_data.baseurl}/custom-menus/{group_id}/items",
             json=item,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['menuItem']
@@ -269,13 +270,13 @@ class CustomMenus:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.put(
-            f"{self.auth_data['baseurl']}/custom-menus/{group_id}/items/{item_id}",
+            f"{self.auth_data.baseurl}/custom-menus/{group_id}/items/{item_id}",
             json=data,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['menuItem']
@@ -294,12 +295,12 @@ class CustomMenus:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.delete(
-            f"{self.auth_data['baseurl']}/custom-menus/{group_id}/items/{item_id}",
-            headers=self.auth_data['headers']
+            f"{self.auth_data.baseurl}/custom-menus/{group_id}/items/{item_id}",
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()
@@ -324,13 +325,13 @@ class CustomMenus:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.put(
-            f"{self.auth_data['baseurl']}/custom-menus/{group_id}/items/reorder",
+            f"{self.auth_data.baseurl}/custom-menus/{group_id}/items/reorder",
             json={'orders': item_orders},
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['menuItems'] 

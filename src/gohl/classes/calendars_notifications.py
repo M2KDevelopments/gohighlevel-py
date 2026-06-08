@@ -5,6 +5,7 @@ in GoHighLevel, including operations like creating, updating, and deleting notif
 """
 
 import requests
+from .auth.authdata import Auth
 from typing import Dict, List, Optional, TypedDict, Union, Literal
 
 
@@ -25,7 +26,7 @@ class CalendarNotification:
     and specialized functionality for bulk notification management.
     """
 
-    def __init__(self, auth_data: Optional[Dict] = None) -> None:
+    def __init__(self, auth_data: Optional[Auth] = None):
         """Initialize the CalendarNotification class.
 
         Args:
@@ -51,7 +52,7 @@ class CalendarNotification:
         Raises:
             requests.exceptions.RequestException: If the API request fails
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         params = {}
@@ -70,9 +71,9 @@ class CalendarNotification:
                 params['skip'] = extra['skip']
 
         response = requests.get(
-            f"{self.auth_data['baseurl']}/calendars/{calendar_id}/notifications",
+            f"{self.auth_data.baseurl}/calendars/{calendar_id}/notifications",
             params=params,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()
@@ -90,12 +91,12 @@ class CalendarNotification:
         Raises:
             requests.exceptions.RequestException: If the API request fails
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.get(
-            f"{self.auth_data['baseurl']}/calendars/{calendar_id}/notifications/{notification_id}",
-            headers=self.auth_data['headers']
+            f"{self.auth_data.baseurl}/calendars/{calendar_id}/notifications/{notification_id}",
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()
@@ -113,13 +114,13 @@ class CalendarNotification:
         Raises:
             requests.exceptions.RequestException: If the API request fails
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.post(
-            f"{self.auth_data['baseurl']}/calendars/{calendar_id}/notifications/",
+            f"{self.auth_data.baseurl}/calendars/{calendar_id}/notifications/",
             json=notifications,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()
@@ -138,13 +139,13 @@ class CalendarNotification:
         Raises:
             requests.exceptions.RequestException: If the API request fails
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.put(
-            f"{self.auth_data['baseurl']}/calendars/{calendar_id}/notifications/{notification_id}",
+            f"{self.auth_data.baseurl}/calendars/{calendar_id}/notifications/{notification_id}",
             json=notification,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['calendar']
@@ -162,12 +163,12 @@ class CalendarNotification:
         Raises:
             requests.exceptions.RequestException: If the API request fails
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.delete(
-            f"{self.auth_data['baseurl']}/calendars/{calendar_id}/notifications/{notification_id}",
-            headers=self.auth_data['headers']
+            f"{self.auth_data.baseurl}/calendars/{calendar_id}/notifications/{notification_id}",
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['message'] 

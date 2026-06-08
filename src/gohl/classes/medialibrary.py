@@ -6,6 +6,7 @@ in GoHighLevel, including uploads, folders, and file management.
 
 from typing import Dict, List, Optional, TypedDict, BinaryIO
 import requests
+from .auth.authdata import Auth
 
 
 class MediaFolder(TypedDict, total=False):
@@ -33,7 +34,7 @@ class MediaLibrary:
     including uploading, organizing, and retrieving media assets.
     """
 
-    def __init__(self, auth_data: Optional[Dict] = None) -> None:
+    def __init__(self, auth_data: Optional[Auth] = None):
         """Initialize the MediaLibrary class.
 
         Args:
@@ -63,7 +64,7 @@ class MediaLibrary:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         params = {
@@ -75,9 +76,9 @@ class MediaLibrary:
             params['folderId'] = folder_id
 
         response = requests.get(
-            f"{self.auth_data['baseurl']}/media/files",
+            f"{self.auth_data.baseurl}/media/files",
             params=params,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['files']
@@ -95,12 +96,12 @@ class MediaLibrary:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.get(
-            f"{self.auth_data['baseurl']}/media/files/{file_id}",
-            headers=self.auth_data['headers']
+            f"{self.auth_data.baseurl}/media/files/{file_id}",
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['file']
@@ -137,7 +138,7 @@ class MediaLibrary:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         files = {'file': file}
@@ -147,10 +148,10 @@ class MediaLibrary:
         }
 
         response = requests.post(
-            f"{self.auth_data['baseurl']}/media/files",
+            f"{self.auth_data.baseurl}/media/files",
             files=files,
             data=data,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['file']
@@ -175,13 +176,13 @@ class MediaLibrary:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.put(
-            f"{self.auth_data['baseurl']}/media/files/{file_id}",
+            f"{self.auth_data.baseurl}/media/files/{file_id}",
             json=data,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['file']
@@ -199,12 +200,12 @@ class MediaLibrary:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.delete(
-            f"{self.auth_data['baseurl']}/media/files/{file_id}",
-            headers=self.auth_data['headers']
+            f"{self.auth_data.baseurl}/media/files/{file_id}",
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()
@@ -231,7 +232,7 @@ class MediaLibrary:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         params = {
@@ -243,9 +244,9 @@ class MediaLibrary:
             params['parentId'] = parent_id
 
         response = requests.get(
-            f"{self.auth_data['baseurl']}/media/folders",
+            f"{self.auth_data.baseurl}/media/folders",
             params=params,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['folders']
@@ -274,7 +275,7 @@ class MediaLibrary:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         data = {
@@ -283,9 +284,9 @@ class MediaLibrary:
         }
 
         response = requests.post(
-            f"{self.auth_data['baseurl']}/media/folders",
+            f"{self.auth_data.baseurl}/media/folders",
             json=data,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['folder']
@@ -309,13 +310,13 @@ class MediaLibrary:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.put(
-            f"{self.auth_data['baseurl']}/media/folders/{folder_id}",
+            f"{self.auth_data.baseurl}/media/folders/{folder_id}",
             json=data,
-            headers=self.auth_data['headers']
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json()['folder']
@@ -333,12 +334,12 @@ class MediaLibrary:
             requests.exceptions.RequestException: If the API request fails
             ValueError: If authentication data is missing
         """
-        if not self.auth_data or not self.auth_data.get('headers') or not self.auth_data.get('baseurl'):
+        if not self.auth_data:
             raise ValueError("Authentication data is required")
 
         response = requests.delete(
-            f"{self.auth_data['baseurl']}/media/folders/{folder_id}",
-            headers=self.auth_data['headers']
+            f"{self.auth_data.baseurl}/media/folders/{folder_id}",
+            headers=self.auth_data.headers
         )
         response.raise_for_status()
         return response.json() 
